@@ -1,0 +1,111 @@
+.offline-carousel {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  user-select: none;
+}
+
+.offline-carousel-viewport {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  background: #f3f3f3;
+  border-radius: 4px;
+}
+
+.offline-carousel-track {
+  position: relative;
+  width: 100%;
+  min-height: 180px;
+}
+
+.offline-carousel-slide {
+  display: none;
+  width: 100%;
+  text-align: center;
+}
+
+.offline-carousel-slide.is-active {
+  display: block;
+  animation: offlineCarouselFade 0.45s ease;
+}
+
+.offline-carousel-slide a {
+  display: block;
+}
+
+.offline-carousel-slide img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.offline-carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  color: #fff;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.offline-carousel-btn:hover {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.offline-carousel-prev {
+  left: 8px;
+}
+
+.offline-carousel-next {
+  right: 8px;
+}
+
+.offline-carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.offline-carousel-dot {
+  width: 9px;
+  height: 9px;
+  border: 0;
+  border-radius: 50%;
+  background: #c8c8c8;
+  cursor: pointer;
+  padding: 0;
+}
+
+.offline-carousel-dot.is-active {
+  background: #444;
+}
+
+@keyframes offlineCarouselFade {
+  from { opacity: 0.35; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 600px) {
+  .offline-carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+  }
+}
