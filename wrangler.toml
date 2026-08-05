@@ -6,7 +6,7 @@ pages_build_output_dir = "htjwc.weebly.com"
 [[d1_databases]]
 binding = "DB"
 database_name = "honda-stores"
-database_id = "00000000-0000-0000-0000-000000000001"
+database_id = "d91d37ea-1735-4473-8df4-afece17b5cd8"
 
 [[r2_buckets]]
 binding = "FILES"
