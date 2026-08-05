@@ -126,7 +126,7 @@
     field('f-discount').value = '';
     field('f-notes').value = '';
     field('f-website').value = '';
-    field('f-sort').value = '0';
+    field('f-sort').value = '';
     field('f-visible').checked = true;
     setImages([]);
     field('f-pdf-url').value = '';
@@ -152,7 +152,7 @@
     field('f-discount').value = store.discount || '';
     field('f-notes').value = store.notes || '';
     field('f-website').value = store.website || '';
-    field('f-sort').value = store.sort_order != null ? store.sort_order : 0;
+    field('f-sort').value = store.sort_order != null ? store.sort_order : '';
     field('f-visible').checked = !!store.visible;
     setImages(
       Array.isArray(store.images) && store.images.length
@@ -171,7 +171,8 @@
 
   function collectPayload() {
     var images = getImages();
-    return {
+    var sortRaw = field('f-sort').value;
+    var payload = {
       category: field('f-category').value,
       name: field('f-name').value.trim(),
       address: field('f-address').value.trim(),
@@ -187,9 +188,12 @@
       image_url: images[0] || '',
       pdf_url: field('f-pdf-url').value.trim(),
       pdf_name: field('f-pdf-name').value.trim(),
-      sort_order: Number(field('f-sort').value) || 0,
       visible: field('f-visible').checked ? 1 : 0,
     };
+    if (sortRaw !== '' && sortRaw != null) {
+      payload.sort_order = Number(sortRaw);
+    }
+    return payload;
   }
 
   function renderTable() {

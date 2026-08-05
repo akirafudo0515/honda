@@ -88,11 +88,26 @@ export function prepareStoreData(body, { partial = false } = {}) {
   if (data.visible !== undefined) {
     data.visible = data.visible === false || data.visible === 0 ? 0 : 1;
   }
-  if (data.sort_order !== undefined) {
-    data.sort_order = Number.isFinite(Number(data.sort_order)) ? Number(data.sort_order) : 0;
+  if (Object.prototype.hasOwnProperty.call(data, 'sort_order')) {
+    const raw = data.sort_order;
+    if (raw === '' || raw === null || raw === undefined) {
+      delete data.sort_order;
+    } else {
+      const n = Number(raw);
+      data.sort_order = Number.isFinite(n) ? n : undefined;
+      if (data.sort_order === undefined) delete data.sort_order;
+    }
   }
   if (data.name !== undefined) data.name = String(data.name || '').trim();
   if (data.category !== undefined) data.category = String(data.category || '').trim();
 
   return data;
+}
+
+export async function nextSortOrder(db, category) {
+  const row = await db
+    .prepare('SELECT COALESCE(MAX(sort_order), -1) AS max_sort FROM stores WHERE category = ?')
+    .bind(category)
+    .first();
+  return (row && Number.isFinite(Number(row.max_sort)) ? Number(row.max_sort) : -1) + 1;
 }

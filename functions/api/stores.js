@@ -1,5 +1,5 @@
 import { json, requireAuth } from '../_lib/auth.js';
-import { prepareStoreData, rowToStore } from '../_lib/stores.js';
+import { nextSortOrder, prepareStoreData, rowToStore } from '../_lib/stores.js';
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -46,6 +46,11 @@ export async function onRequestPost(context) {
   const data = prepareStoreData(body, { partial: false });
   if (!data.name || !data.category) {
     return json({ error: '店名與分類為必填' }, { status: 400 });
+  }
+
+  // No sort_order provided → append to end of that category
+  if (data.sort_order === undefined) {
+    data.sort_order = await nextSortOrder(env.DB, data.category);
   }
 
   const cols = Object.keys(data);
