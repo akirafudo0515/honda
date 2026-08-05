@@ -29,6 +29,7 @@ ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, body, html, p, blockquote, fields
  .cento-header .logo img { display: block; max-width: 200px; }
  .cento-header .logo #wsite-title { display: block; max-width: 500px; }
  .cento-header .logo, .cento-header .logo a { display: block; color: #000000; text-align: center; letter-spacing: .04em; font-family: 'Quattrocento Sans', sans-serif; font-size: 40px; font-weight: 700; line-height: normal; }
+ .cento-header .logo #wsite-title { text-align: center; line-height: 1.25; }
  .cento-header .nav-wrap { overflow: hidden; width: 100%; padding: 10px 0; background: #ffffff; box-sizing: border-box; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
  .cento-header .hamburger { display: none; }
  .nav { text-align: center; }
@@ -171,11 +172,11 @@ ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, body, html, p, blockquote, fields
  body.nav-open .cento-header .hamburger span:before { top: 1px; -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg); }
  body.nav-open .cento-header .hamburger span:after { top: -1px; -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg); }
  .cento-header { position: fixed; top: 0; left: 0; z-index: 9; height: 50px; padding: 10px 0; border-bottom: 2px solid #f7f7f7; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
- .cento-header .logo { display: table; overflow-y: hidden; max-width: calc(100vw - 100px); height: 30px; margin: 0 auto; }
+ .cento-header .logo { display: table; overflow-y: visible; max-width: calc(100vw - 100px); height: auto; min-height: 30px; margin: 0 auto; padding: 4px 0; }
  .cento-header .logo .wsite-logo { display: table-cell; vertical-align: middle; }
- .cento-header .logo a { font-size: 18px; line-height: 30px; }
+ .cento-header .logo a { font-size: 16px; line-height: 1.25; }
  .cento-header .logo a img { height: auto; max-height: 30px; margin-top: 0 !important; margin-left: 0 !important; }
- .cento-header #wsite-title { display: block; font-size: 18px !important; line-height: 1 !important; }
+ .cento-header #wsite-title { display: block; font-size: 16px !important; line-height: 1.25 !important; text-align: center; }
  .cento-header .hamburger { position: absolute; z-index: 6; top: 0; left: 5px; display: inline-block; width: 30px; height: 30px; padding: 10px; -webkit-transition: all 300ms ease-in-out; -moz-transition: all 300ms ease-in-out; -ms-transition: all 300ms ease-in-out; -o-transition: all 300ms ease-in-out; transition: all 300ms ease-in-out; }
  .cento-header .hamburger span, .cento-header .hamburger span:before, .cento-header .hamburger span:after { position: relative; display: block; width: 22px; height: 2px; background: #3e3e3e; content: ''; -webkit-transition: all 300ms ease; -moz-transition: all 300ms ease; -ms-transition: all 300ms ease; -o-transition: all 300ms ease; transition: all 300ms ease; }
  .cento-header .hamburger span { top: 9px; left: 4px; margin: 5px 0; }

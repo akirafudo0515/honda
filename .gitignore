@@ -4,3 +4,11 @@ hts-log.txt
 backblue.gif
 fade.gif
 /index.html
+node_modules/
+.wrangler/
+.dev.vars
+*.log
+_dump_tmp.json
+course_summary_utf8.txt
+extract_aiga2_stdout.txt
+extract_result_console.txt

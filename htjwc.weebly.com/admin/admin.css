@@ -1,0 +1,242 @@
+:root {
+  --bg: #f4f6f8;
+  --card: #fff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --brand: #0f766e;
+  --brand-dark: #0b5f59;
+  --danger: #b91c1c;
+  --shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  background: linear-gradient(160deg, #e8f7f5, var(--bg) 40%);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+#app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+h1, h2 { margin: 0 0 8px; }
+
+.muted { color: var(--muted); margin: 0; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+
+.login-card {
+  max-width: 420px;
+  margin: 10vh auto 0;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+input, select, textarea, button {
+  font: inherit;
+}
+
+input, select, textarea {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: #fff;
+}
+
+textarea { resize: vertical; }
+
+button {
+  border: 0;
+  border-radius: 10px;
+  background: var(--brand);
+  color: #fff;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+
+button:hover { background: var(--brand-dark); }
+
+button.secondary {
+  background: #e5e7eb;
+  color: var(--text);
+}
+
+button.secondary:hover { background: #d1d5db; }
+
+button.danger {
+  background: var(--danger);
+}
+
+button.danger:hover { background: #991b1b; }
+
+.error { color: var(--danger); margin-top: 10px; }
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.toolbar label { margin: 0; min-width: 220px; }
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.list-card { overflow: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th, td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: middle;
+}
+
+th { color: var(--muted); font-weight: 600; }
+
+tbody tr { cursor: pointer; }
+tbody tr:hover { background: #f8fafc; }
+tbody tr.active { background: #ecfeff; }
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-top: 28px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.upload-block {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+
+.preview {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.preview img {
+  display: block;
+  max-width: 180px;
+  max-height: 120px;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+
+.image-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.image-gallery .empty {
+  width: 100%;
+}
+
+.image-thumb {
+  position: relative;
+  width: 110px;
+}
+
+.image-thumb img {
+  width: 110px;
+  height: 80px;
+  object-fit: cover;
+  margin: 0;
+  border: 1px solid var(--line);
+}
+
+.image-thumb button {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  background: rgba(185, 28, 28, 0.92);
+}
+
+.status {
+  margin-bottom: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+.status.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #e5e7eb;
+}
+
+.badge.on { background: #d1fae5; color: #065f46; }
+.badge.off { background: #fee2e2; color: #991b1b; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .row { grid-template-columns: 1fr; }
+  .checkbox { margin-top: 0; }
+}

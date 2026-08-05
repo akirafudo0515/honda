@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>特約商店後台</title>
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+  <div id="app">
+    <section id="login-view" class="card login-card">
+      <h1>特約商店後台</h1>
+      <p class="muted">請輸入管理密碼</p>
+      <form id="login-form">
+        <label>
+          密碼
+          <input type="password" id="password" autocomplete="current-password" required />
+        </label>
+        <button type="submit">登入</button>
+        <p id="login-error" class="error" hidden></p>
+      </form>
+    </section>
+
+    <section id="admin-view" hidden>
+      <header class="topbar">
+        <div>
+          <h1>店家管理</h1>
+          <p class="muted">新增、編輯、刪除特約店家</p>
+        </div>
+        <button type="button" id="logout-btn" class="secondary">登出</button>
+      </header>
+
+      <div class="toolbar card">
+        <label>
+          分類篩選
+          <select id="filter-category">
+            <option value="">全部</option>
+            <option value="dining">餐飲相關特約店家</option>
+            <option value="cafe">咖啡 · 點心 · 甜品類</option>
+            <option value="hotel">旅館民宿特約店家</option>
+            <option value="souvenir">伴手禮/觀光工廠特約店家</option>
+            <option value="leisure">生活休閒類特約店家</option>
+            <option value="shopping">生活服務及購物</option>
+          </select>
+        </label>
+        <button type="button" id="new-btn">＋ 新增店家</button>
+      </div>
+
+      <div id="status" class="status" hidden></div>
+
+      <div class="layout">
+        <div class="card list-card">
+          <div id="store-table-wrap">
+            <table id="store-table">
+              <thead>
+                <tr>
+                  <th>排序</th>
+                  <th>店名</th>
+                  <th>分類</th>
+                  <th>顯示</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="store-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <form id="editor" class="card editor-card" hidden>
+          <h2 id="editor-title">新增店家</h2>
+          <input type="hidden" id="store-id" />
+
+          <label>
+            分類 *
+            <select id="f-category" required>
+              <option value="dining">餐飲相關特約店家</option>
+              <option value="cafe">咖啡 · 點心 · 甜品類</option>
+              <option value="hotel">旅館民宿特約店家</option>
+              <option value="souvenir">伴手禮/觀光工廠特約店家</option>
+              <option value="leisure">生活休閒類特約店家</option>
+              <option value="shopping">生活服務及購物</option>
+            </select>
+          </label>
+
+          <label>
+            店名 *
+            <input id="f-name" required maxlength="200" />
+          </label>
+
+          <label>
+            地址
+            <input id="f-address" maxlength="300" />
+          </label>
+
+          <div class="row">
+            <label>
+              電話
+              <input id="f-phone" maxlength="100" />
+            </label>
+            <label>
+              營業時間
+              <input id="f-hours" maxlength="200" />
+            </label>
+          </div>
+
+          <label>
+            交通
+            <input id="f-transport" maxlength="300" />
+          </label>
+
+          <label>
+            服務項目
+            <input id="f-services" maxlength="300" />
+          </label>
+
+          <label>
+            介紹
+            <textarea id="f-description" rows="5"></textarea>
+          </label>
+
+          <label>
+            優惠內容
+            <textarea id="f-discount" rows="3"></textarea>
+          </label>
+
+          <label>
+            備註
+            <input id="f-notes" maxlength="300" />
+          </label>
+
+          <label>
+            官網連結
+            <input id="f-website" type="url" placeholder="https://" />
+          </label>
+
+          <div class="row">
+            <label>
+              排序（數字越小越前面）
+              <input id="f-sort" type="number" value="0" />
+            </label>
+            <label class="checkbox">
+              <input id="f-visible" type="checkbox" checked />
+              前台顯示
+            </label>
+          </div>
+
+          <div class="upload-block">
+            <label>
+              店家圖片（可多選，最多 12 張）
+              <input id="f-image-file" type="file" accept="image/*" multiple />
+            </label>
+            <input id="f-image-urls" type="hidden" value="[]" />
+            <div id="image-preview" class="preview image-gallery"></div>
+          </div>
+
+          <div class="upload-block">
+            <label>
+              PDF 附件
+              <input id="f-pdf-file" type="file" accept="application/pdf" />
+            </label>
+            <input id="f-pdf-url" type="hidden" />
+            <input id="f-pdf-name" type="hidden" />
+            <div id="pdf-preview" class="preview"></div>
+          </div>
+
+          <div class="actions">
+            <button type="submit">儲存</button>
+            <button type="button" id="cancel-btn" class="secondary">取消</button>
+            <button type="button" id="delete-btn" class="danger" hidden>刪除</button>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+  <script src="admin.js"></script>
+</body>
+</html>

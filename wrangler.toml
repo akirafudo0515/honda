@@ -1,0 +1,18 @@
+name = "honda"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "htjwc.weebly.com"
+
+# After `npm run db:create`, replace database_id with the real UUID from Cloudflare.
+[[d1_databases]]
+binding = "DB"
+database_name = "honda-stores"
+database_id = "00000000-0000-0000-0000-000000000001"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "honda-store-files"
+
+[vars]
+# Override these as secrets in Cloudflare Pages: ADMIN_PASSWORD, SESSION_SECRET
+ADMIN_PASSWORD = "honda888"
+SESSION_SECRET = "htjwc-session-2026-honda-club"
