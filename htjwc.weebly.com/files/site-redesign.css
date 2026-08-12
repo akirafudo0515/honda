@@ -575,9 +575,19 @@ body.honda-home-page #wsite-content {
   gap: 24px;
   margin: 48px 0;
   padding: 28px 32px;
-  background: var(--white);
-  color: var(--black);
-  border: 2px solid var(--honda-red);
+  background: #ffffff !important;
+  color: var(--black) !important;
+  border: 2px solid var(--honda-red) !important;
+  box-shadow: none !important;
+}
+
+.home-cta-band > div:first-child {
+  background: transparent !important;
+}
+
+.home-cta-band .wcustomhtml,
+.home-cta-band .wcustomhtml a {
+  background: transparent !important;
 }
 
 .home-cta-band .cta-kicker {
@@ -595,7 +605,7 @@ body.honda-home-page #wsite-content {
   margin: 0;
   font-size: 15px;
   letter-spacing: 0.04em;
-  color: var(--black);
+  color: var(--black) !important;
 }
 
 .home-cta-band a img {
