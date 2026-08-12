@@ -6,7 +6,6 @@ fade.gif
 /index.html
 node_modules/
 .wrangler/
-htjwc.weebly.com/functions/
 .dev.vars
 *.log
 _dump_tmp.json
