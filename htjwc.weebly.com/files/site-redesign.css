@@ -629,7 +629,6 @@ body.honda-home-page #wsite-content {
   position: relative;
   margin: 48px 0;
   text-decoration: none !important;
-  overflow: hidden;
   border: 1px solid var(--gray-200);
   background: #f7f4ef;
   transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
@@ -639,18 +638,12 @@ body.honda-home-page #wsite-content {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  transition: transform 0.5s var(--ease);
+  max-width: 100%;
 }
 
 .home-happygo:hover {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
-}
-
-.home-happygo:hover img {
-  transform: scale(1.015);
 }
 
 .home-gallery {
