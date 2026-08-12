@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="admin.css" />
+      <link rel="stylesheet" href="admin.css?v=20260812c" />
 </head>
 <body>
   <div id="app">
@@ -193,7 +193,7 @@
           <p style="margin:0;color:#6b7280;font-size:14px">尚無活動資料。右側表單填寫標題與內容後按「儲存」，即可顯示於前台專屬活動頁。</p>
         </div>
 
-        <div class="layout">
+        <div class="layout event-admin-layout">
           <div class="card list-card">
             <table id="event-table">
               <thead>
@@ -208,7 +208,22 @@
             </table>
           </div>
 
-          <form id="event-editor" class="card editor-card" hidden>
+          <div class="event-editor-wrap">
+            <div class="card event-preview-card">
+              <p class="event-preview-label">前台預覽（與專屬活動頁相同版型）</p>
+              <article id="event-live-preview" class="admin-event-card" aria-live="polite">
+                <div class="event-copy">
+                  <span class="event-index">EVENT 01</span>
+                  <h3 class="event-title">活動標題預覽</h3>
+                  <div class="event-body">活動內容會顯示在這裡…</div>
+                </div>
+                <div class="event-media">
+                  <div class="event-media-empty">尚未上傳圖片</div>
+                </div>
+              </article>
+            </div>
+
+            <form id="event-editor" class="card editor-card" hidden>
             <h2 id="event-editor-title">新增活動</h2>
             <input type="hidden" id="event-id" />
 
@@ -257,6 +272,6 @@
       </div>
     </section>
   </div>
-  <script src="admin.js"></script>
+  <script src="admin.js?v=20260812c"></script>
 </body>
 </html>

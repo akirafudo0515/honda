@@ -404,6 +404,44 @@
   var newEventBtn = document.getElementById('new-event-btn');
   var eventCancelBtn = document.getElementById('event-cancel-btn');
   var eventDeleteBtn = document.getElementById('event-delete-btn');
+  var eventLivePreview = document.getElementById('event-live-preview');
+
+  function refreshEventPreview(index) {
+    if (!eventLivePreview) return;
+    var title = field('e-title').value.trim() || '活動標題預覽';
+    var body = field('e-body').value.trim() || '活動內容會顯示在這裡…';
+    var imageUrl = field('e-image-url').value.trim();
+    var idx = typeof index === 'number' ? index + 1 : 1;
+    var idxText = idx < 10 ? '0' + idx : String(idx);
+
+    var titleEl = eventLivePreview.querySelector('.event-title');
+    var bodyEl = eventLivePreview.querySelector('.event-body');
+    var indexEl = eventLivePreview.querySelector('.event-index');
+    var mediaEl = eventLivePreview.querySelector('.event-media');
+
+    if (indexEl) indexEl.textContent = 'EVENT ' + idxText;
+    if (titleEl) titleEl.textContent = title;
+    if (bodyEl) bodyEl.textContent = body;
+    if (mediaEl) {
+      mediaEl.innerHTML = imageUrl
+        ? '<img src="' + escapeHtml(imageUrl) + '" alt="" />'
+        : '<div class="event-media-empty">尚未上傳圖片</div>';
+    }
+  }
+
+  function bindEventPreviewInputs() {
+    ['e-title', 'e-body', 'e-image-url'].forEach(function (id) {
+      var el = field(id);
+      if (!el || el._previewBound) return;
+      el._previewBound = true;
+      el.addEventListener('input', function () {
+        var idx = events.findIndex(function (ev) {
+          return ev.id === editingEventId;
+        });
+        refreshEventPreview(idx >= 0 ? idx : events.length);
+      });
+    });
+  }
 
   function setEventImagePreview(url) {
     var box = document.getElementById('event-image-preview');
@@ -437,6 +475,7 @@
     setEventImagePreview('');
     eventEditorTitle.textContent = '新增活動';
     eventDeleteBtn.hidden = true;
+    refreshEventPreview(events.length);
   }
 
   function fillEventEditor(ev) {
@@ -452,6 +491,10 @@
     eventEditorTitle.textContent = '編輯活動';
     eventDeleteBtn.hidden = false;
     eventEditor.hidden = false;
+    var idx = events.findIndex(function (item) {
+      return item.id === ev.id;
+    });
+    refreshEventPreview(idx >= 0 ? idx : 0);
   }
 
   function collectEventPayload() {
@@ -503,7 +546,10 @@
     renderEventTable();
     var hint = document.getElementById('events-empty-hint');
     if (hint) hint.hidden = !!events.length;
-    if (!events.length && eventEditor.hidden) {
+    if (events.length) {
+      fillEventEditor(events[0]);
+      eventEditor.hidden = false;
+    } else {
       resetEventEditor();
       eventEditor.hidden = false;
     }
@@ -515,7 +561,14 @@
     });
     document.getElementById('tab-stores').hidden = name !== 'stores';
     document.getElementById('tab-events').hidden = name !== 'events';
+    if (name === 'stores') {
+      editor.hidden = true;
+      resetEventEditor();
+      if (eventEditor) eventEditor.hidden = true;
+    }
     if (name === 'events') {
+      editor.hidden = true;
+      bindEventPreviewInputs();
       loadEvents().catch(function (err) {
         showStatus(err.message || '活動載入失敗', true);
       });
@@ -548,6 +601,11 @@
       field('e-image-url').value = data.url;
       setEventImagePreview(data.url);
       field('e-image-file').value = '';
+      refreshEventPreview(
+        events.findIndex(function (ev) {
+          return ev.id === editingEventId;
+        })
+      );
       showStatus('活動圖片已上傳');
     } catch (err) {
       showStatus(err.message, true);
@@ -590,6 +648,8 @@
       showStatus(err.message, true);
     }
   });
+
+  bindEventPreviewInputs();
 
   // boot
   api('/api/login')
