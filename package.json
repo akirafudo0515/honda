@@ -3,6 +3,8 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
+    "build": "node scripts/copy-functions.js",
+    "deploy": "npm run build && wrangler pages deploy htjwc.weebly.com --project-name=honda",
     "dev": "wrangler pages dev htjwc.weebly.com --persist-to=.wrangler/state",
     "migrate:local": "wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./schema.sql && wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./seed.sql",
     "migrate:remote": "wrangler d1 execute DB --remote --file=./schema.sql && wrangler d1 execute DB --remote --file=./seed.sql",

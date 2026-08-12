@@ -18,7 +18,7 @@ npm run dev              # wrangler pages dev
 
 - 前台：`http://127.0.0.1:8788/`
 - 後台：`http://127.0.0.1:8788/admin/`
-- 預設密碼：`change-me-please`（見 `wrangler.toml` 的 `ADMIN_PASSWORD`）
+- 預設密碼：`honda888`（見 `wrangler.toml` 的 `ADMIN_PASSWORD`；若 Cloudflare 後台有設定 Secret 則以 Secret 為準）
 
 ## 上線（需先 `npx wrangler login`）
 
@@ -33,6 +33,8 @@ npm run r2:create
 
 3. 在 Cloudflare Pages 專案 `honda` 設定：
 
+- **Build command：** `npm run build`
+- **Build output directory：** `htjwc.weebly.com`
 - D1 binding：`DB` → `honda-stores`
 - R2 binding：`FILES` → `honda-store-files`
 - Secrets：`ADMIN_PASSWORD`、`SESSION_SECRET`
