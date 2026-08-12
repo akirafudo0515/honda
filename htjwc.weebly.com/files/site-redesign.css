@@ -550,13 +550,6 @@ body.honda-home-page #wsite-content {
   min-height: 120px;
 }
 
-.home-req--accent {
-  background: #fff !important;
-  outline: 2px solid var(--honda-red);
-  outline-offset: -1px;
-  z-index: 1;
-}
-
 .home-req .num {
   display: block;
   margin-bottom: 12px;
@@ -582,9 +575,9 @@ body.honda-home-page #wsite-content {
   gap: 24px;
   margin: 48px 0;
   padding: 28px 32px;
-  background: var(--black);
-  color: #fff;
-  border-left: 3px solid var(--honda-red);
+  background: var(--white);
+  color: var(--black);
+  border: 2px solid var(--honda-red);
 }
 
 .home-cta-band .cta-kicker {
@@ -602,6 +595,7 @@ body.honda-home-page #wsite-content {
   margin: 0;
   font-size: 15px;
   letter-spacing: 0.04em;
+  color: var(--black);
 }
 
 .home-cta-band a img {
