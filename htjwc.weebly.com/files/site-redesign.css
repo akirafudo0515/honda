@@ -548,6 +548,16 @@ body.honda-home-page #wsite-content {
   background: var(--white);
   padding: 24px 18px;
   min-height: 120px;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.home-req--accent {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: var(--white) !important;
 }
 
 .home-req .num {
