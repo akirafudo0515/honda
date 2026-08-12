@@ -8,8 +8,9 @@
     "dev": "wrangler pages dev htjwc.weebly.com --persist-to=.wrangler/state",
     "migrate:local": "wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./schema.sql && wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./seed.sql",
     "migrate:remote": "wrangler d1 execute DB --remote --file=./schema.sql && wrangler d1 execute DB --remote --file=./seed.sql",
-    "migrate:events:local": "wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./schema-events.sql",
-    "migrate:events:remote": "wrangler d1 execute DB --remote --file=./schema-events.sql",
+    "migrate:events:local": "wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./schema-events.sql && wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./seed-events.sql",
+    "migrate:events:remote": "wrangler d1 execute DB --remote --file=./schema-events.sql && wrangler d1 execute DB --remote --file=./seed-events.sql",
+    "extract:events": "node scripts/extract-events.js",
     "extract": "node scripts/extract-stores.js",
     "db:create": "wrangler d1 create honda-stores",
     "r2:create": "wrangler r2 bucket create honda-store-files"

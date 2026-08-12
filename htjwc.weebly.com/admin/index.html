@@ -185,8 +185,12 @@
       <!-- EVENTS -->
       <div id="tab-events" class="tab-panel" hidden>
         <div class="toolbar card">
-          <p class="muted" style="margin:0">管理前台「專屬活動」頁面內容</p>
+          <p class="muted" style="margin:0">管理前台「專屬活動」頁面內容。目前資料庫若尚無活動，請按「新增活動」或儲存下方表單。</p>
           <button type="button" id="new-event-btn">＋ 新增活動</button>
+        </div>
+
+        <div id="events-empty-hint" class="card" style="margin-bottom:16px;padding:16px 20px" hidden>
+          <p style="margin:0;color:#6b7280;font-size:14px">尚無活動資料。右側表單填寫標題與內容後按「儲存」，即可顯示於前台專屬活動頁。</p>
         </div>
 
         <div class="layout">

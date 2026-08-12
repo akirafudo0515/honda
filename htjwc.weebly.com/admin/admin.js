@@ -501,6 +501,12 @@
     var data = await api('/api/events?all=1');
     events = data.events || [];
     renderEventTable();
+    var hint = document.getElementById('events-empty-hint');
+    if (hint) hint.hidden = !!events.length;
+    if (!events.length && eventEditor.hidden) {
+      resetEventEditor();
+      eventEditor.hidden = false;
+    }
   }
 
   function switchTab(name) {
