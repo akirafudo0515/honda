@@ -214,14 +214,8 @@
           reqs
             .map(function (r, i) {
               var text = r.replace(/^或/, '');
-              var accent =
-                text.indexOf('提供此特約商店圖像') !== -1 || i === 3
-                  ? ' home-req--accent'
-                  : '';
               return (
-                '<div class="home-req' +
-                accent +
-                ' reveal"><span class="num">0' +
+                '<div class="home-req reveal"><span class="num">0' +
                 (i + 1) +
                 '</span><p>' +
                 text +
