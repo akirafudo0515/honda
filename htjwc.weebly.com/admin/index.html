@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="admin.css?v=20260812c" />
+      <link rel="stylesheet" href="admin.css?v=20260812d" />
 </head>
 <body>
   <div id="app">
@@ -148,9 +148,12 @@
                 排序（數字越小越前面；空白＝排最後）
                 <input id="f-sort" type="number" placeholder="空白＝最後" />
               </label>
-              <label class="checkbox">
-                <input id="f-visible" type="checkbox" checked />
-                前台顯示
+              <label>
+                前台狀態
+                <select id="f-visible">
+                  <option value="1">顯示</option>
+                  <option value="0">不顯示</option>
+                </select>
               </label>
             </div>
 
@@ -247,9 +250,12 @@
                 排序（數字越小越前面；空白＝排最後）
                 <input id="e-sort" type="number" placeholder="空白＝最後" />
               </label>
-              <label class="checkbox">
-                <input id="e-visible" type="checkbox" checked />
-                前台顯示
+              <label>
+                前台狀態
+                <select id="e-visible">
+                  <option value="1">顯示</option>
+                  <option value="0">不顯示</option>
+                </select>
               </label>
             </div>
 
@@ -272,6 +278,6 @@
       </div>
     </section>
   </div>
-  <script src="admin.js?v=20260812c"></script>
+  <script src="admin.js?v=20260812d"></script>
 </body>
 </html>

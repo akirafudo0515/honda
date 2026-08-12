@@ -254,6 +254,12 @@ tbody tr.active { background: #ecfeff; }
   border-radius: 999px;
   font-size: 12px;
   background: #e5e7eb;
+  border: 0;
+  cursor: pointer;
+}
+
+.badge:hover {
+  opacity: 0.85;
 }
 
 .badge.on { background: #d1fae5; color: #065f46; }

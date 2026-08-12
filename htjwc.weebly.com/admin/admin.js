@@ -127,7 +127,7 @@
     field('f-notes').value = '';
     field('f-website').value = '';
     field('f-sort').value = '';
-    field('f-visible').checked = true;
+    field('f-visible').value = '1';
     setImages([]);
     field('f-pdf-url').value = '';
     field('f-pdf-name').value = '';
@@ -153,7 +153,7 @@
     field('f-notes').value = store.notes || '';
     field('f-website').value = store.website || '';
     field('f-sort').value = store.sort_order != null ? store.sort_order : '';
-    field('f-visible').checked = !!store.visible;
+    field('f-visible').value = store.visible ? '1' : '0';
     setImages(
       Array.isArray(store.images) && store.images.length
         ? store.images
@@ -188,7 +188,7 @@
       image_url: images[0] || '',
       pdf_url: field('f-pdf-url').value.trim(),
       pdf_name: field('f-pdf-name').value.trim(),
-      visible: field('f-visible').checked ? 1 : 0,
+      visible: field('f-visible').value === '1' ? 1 : 0,
     };
     if (sortRaw !== '' && sortRaw != null) {
       payload.sort_order = Number(sortRaw);
@@ -217,15 +217,25 @@
         escapeHtml(s.name) +
         '</td><td>' +
         escapeHtml(CATEGORIES[s.category] || s.category) +
-        '</td><td><span class="badge ' +
+        '</td><td><button type="button" class="badge ' +
         (s.visible ? 'on' : 'off') +
+        '" data-visible-toggle="store" data-id="' +
+        s.id +
         '">' +
-        (s.visible ? '顯示' : '隱藏') +
-        '</span></td><td>編輯</td>';
-      tr.addEventListener('click', function () {
+        (s.visible ? '顯示' : '不顯示') +
+        '</button></td><td>編輯</td>';
+      tr.addEventListener('click', function (e) {
+        if (e.target && e.target.getAttribute('data-visible-toggle') === 'store') return;
         fillEditor(s);
         renderTable();
       });
+      var badge = tr.querySelector('[data-visible-toggle="store"]');
+      if (badge) {
+        badge.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleStoreVisible(s.id);
+        });
+      }
       tbody.appendChild(tr);
     });
   }
@@ -242,6 +252,30 @@
     var data = await api('/api/stores?all=1');
     stores = data.stores || [];
     renderTable();
+  }
+
+  async function toggleStoreVisible(id) {
+    var store = stores.find(function (s) {
+      return s.id === id;
+    });
+    if (!store) return;
+    var nextVisible = store.visible ? 0 : 1;
+    try {
+      await api('/api/stores/' + id, {
+        method: 'PUT',
+        json: { visible: nextVisible },
+      });
+      showStatus(nextVisible ? '已設為顯示' : '已設為不顯示');
+      await loadStores();
+      if (editingId === id) {
+        var updated = stores.find(function (s) {
+          return s.id === id;
+        });
+        if (updated) fillEditor(updated);
+      }
+    } catch (err) {
+      showStatus(err.message, true);
+    }
   }
 
   async function uploadOne(file) {
@@ -469,7 +503,7 @@
     field('e-body').value = '';
     field('e-link').value = '';
     field('e-sort').value = '';
-    field('e-visible').checked = true;
+    field('e-visible').value = '1';
     field('e-image-url').value = '';
     field('e-image-file').value = '';
     setEventImagePreview('');
@@ -485,7 +519,7 @@
     field('e-body').value = ev.body || '';
     field('e-link').value = ev.link_url || '';
     field('e-sort').value = ev.sort_order != null ? ev.sort_order : '';
-    field('e-visible').checked = !!ev.visible;
+    field('e-visible').value = ev.visible ? '1' : '0';
     field('e-image-url').value = ev.image_url || '';
     setEventImagePreview(ev.image_url || '');
     eventEditorTitle.textContent = '編輯活動';
@@ -504,7 +538,7 @@
       body: field('e-body').value,
       link_url: field('e-link').value.trim(),
       image_url: field('e-image-url').value.trim(),
-      visible: field('e-visible').checked ? 1 : 0,
+      visible: field('e-visible').value === '1' ? 1 : 0,
     };
     if (sortRaw !== '' && sortRaw != null) {
       payload.sort_order = Number(sortRaw);
@@ -527,31 +561,66 @@
         ev.sort_order +
         '</td><td>' +
         escapeHtml(ev.title) +
-        '</td><td><span class="badge ' +
+        '</td><td><button type="button" class="badge ' +
         (ev.visible ? 'on' : 'off') +
+        '" data-visible-toggle="event" data-id="' +
+        ev.id +
         '">' +
-        (ev.visible ? '顯示' : '隱藏') +
-        '</span></td><td>編輯</td>';
-      tr.addEventListener('click', function () {
+        (ev.visible ? '顯示' : '不顯示') +
+        '</button></td><td>編輯</td>';
+      tr.addEventListener('click', function (e) {
+        if (e.target && e.target.getAttribute('data-visible-toggle') === 'event') return;
         fillEventEditor(ev);
         renderEventTable();
       });
+      var badge = tr.querySelector('[data-visible-toggle="event"]');
+      if (badge) {
+        badge.addEventListener('click', function (e) {
+          e.stopPropagation();
+          toggleEventVisible(ev.id);
+        });
+      }
       eventTbody.appendChild(tr);
     });
   }
 
-  async function loadEvents() {
+  async function loadEvents(options) {
+    options = options || {};
     var data = await api('/api/events?all=1');
     events = data.events || [];
     renderEventTable();
     var hint = document.getElementById('events-empty-hint');
     if (hint) hint.hidden = !!events.length;
     if (events.length) {
-      fillEventEditor(events[0]);
+      var keepId = options.preserveId != null ? options.preserveId : editingEventId;
+      var target = keepId
+        ? events.find(function (item) {
+            return item.id === keepId;
+          })
+        : null;
+      fillEventEditor(target || events[0]);
       eventEditor.hidden = false;
     } else {
       resetEventEditor();
       eventEditor.hidden = false;
+    }
+  }
+
+  async function toggleEventVisible(id) {
+    var ev = events.find(function (item) {
+      return item.id === id;
+    });
+    if (!ev) return;
+    var nextVisible = ev.visible ? 0 : 1;
+    try {
+      await api('/api/events/' + id, {
+        method: 'PUT',
+        json: { visible: nextVisible },
+      });
+      showStatus(nextVisible ? '已設為顯示' : '已設為不顯示');
+      await loadEvents({ preserveId: editingEventId || id });
+    } catch (err) {
+      showStatus(err.message, true);
     }
   }
 
