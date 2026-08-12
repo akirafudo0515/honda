@@ -56,15 +56,27 @@ function normalizeImagesInput(body) {
     .slice(0, 12);
 }
 
+function decodeMaybeUri(value) {
+  const raw = String(value == null ? '' : value);
+  if (!raw || !/%[0-9a-fA-F]{2}/.test(raw)) return raw;
+  try {
+    return decodeURIComponent(raw.replace(/\+/g, ' '));
+  } catch {
+    return raw;
+  }
+}
+
 export function rowToStore(row) {
   if (!row) return null;
   const images = parseImages(row);
+  const pdf_name = decodeMaybeUri(row.pdf_name || '');
   return {
     ...row,
     visible: !!row.visible,
     images,
     image_url: images[0] || '',
     image_urls: JSON.stringify(images),
+    pdf_name,
   };
 }
 
@@ -100,6 +112,7 @@ export function prepareStoreData(body, { partial = false } = {}) {
   }
   if (data.name !== undefined) data.name = String(data.name || '').trim();
   if (data.category !== undefined) data.category = String(data.category || '').trim();
+  if (data.pdf_name !== undefined) data.pdf_name = decodeMaybeUri(String(data.pdf_name || '').trim());
 
   return data;
 }

@@ -18,5 +18,16 @@ export async function onRequestGet(context) {
   const type = obj.httpMetadata?.contentType || 'application/octet-stream';
   headers.set('Content-Type', type);
 
+  const originalName = obj.customMetadata?.originalName || key;
+  // RFC 5987 so Chinese filenames download correctly
+  const asciiFallback = String(originalName)
+    .replace(/[^\x20-\x7E]/g, '_')
+    .replace(/["\\]/g, '_');
+  const encoded = encodeURIComponent(originalName).replace(/['()]/g, escape);
+  headers.set(
+    'Content-Disposition',
+    `inline; filename="${asciiFallback}"; filename*=UTF-8''${encoded}`
+  );
+
   return new Response(obj.body, { headers });
 }

@@ -395,6 +395,196 @@
     }
   });
 
+  // ===== Events =====
+  var events = [];
+  var editingEventId = null;
+  var eventEditor = document.getElementById('event-editor');
+  var eventEditorTitle = document.getElementById('event-editor-title');
+  var eventTbody = document.getElementById('event-tbody');
+  var newEventBtn = document.getElementById('new-event-btn');
+  var eventCancelBtn = document.getElementById('event-cancel-btn');
+  var eventDeleteBtn = document.getElementById('event-delete-btn');
+
+  function setEventImagePreview(url) {
+    var box = document.getElementById('event-image-preview');
+    if (!url) {
+      box.innerHTML = '尚未上傳圖片';
+      return;
+    }
+    box.innerHTML =
+      '<img src="' +
+      escapeHtml(url) +
+      '" alt="" /><div><button type="button" id="e-image-clear" class="secondary">移除圖片</button></div>';
+    var clearBtn = document.getElementById('e-image-clear');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        field('e-image-url').value = '';
+        setEventImagePreview('');
+      });
+    }
+  }
+
+  function resetEventEditor() {
+    editingEventId = null;
+    field('event-id').value = '';
+    field('e-title').value = '';
+    field('e-body').value = '';
+    field('e-link').value = '';
+    field('e-sort').value = '';
+    field('e-visible').checked = true;
+    field('e-image-url').value = '';
+    field('e-image-file').value = '';
+    setEventImagePreview('');
+    eventEditorTitle.textContent = '新增活動';
+    eventDeleteBtn.hidden = true;
+  }
+
+  function fillEventEditor(ev) {
+    editingEventId = ev.id;
+    field('event-id').value = ev.id;
+    field('e-title').value = ev.title || '';
+    field('e-body').value = ev.body || '';
+    field('e-link').value = ev.link_url || '';
+    field('e-sort').value = ev.sort_order != null ? ev.sort_order : '';
+    field('e-visible').checked = !!ev.visible;
+    field('e-image-url').value = ev.image_url || '';
+    setEventImagePreview(ev.image_url || '');
+    eventEditorTitle.textContent = '編輯活動';
+    eventDeleteBtn.hidden = false;
+    eventEditor.hidden = false;
+  }
+
+  function collectEventPayload() {
+    var sortRaw = field('e-sort').value;
+    var payload = {
+      title: field('e-title').value.trim(),
+      body: field('e-body').value,
+      link_url: field('e-link').value.trim(),
+      image_url: field('e-image-url').value.trim(),
+      visible: field('e-visible').checked ? 1 : 0,
+    };
+    if (sortRaw !== '' && sortRaw != null) {
+      payload.sort_order = Number(sortRaw);
+    }
+    return payload;
+  }
+
+  function renderEventTable() {
+    eventTbody.innerHTML = '';
+    if (!events.length) {
+      eventTbody.innerHTML =
+        '<tr><td colspan="4" style="color:#6b7280;padding:20px;">尚無活動，請新增</td></tr>';
+      return;
+    }
+    events.forEach(function (ev) {
+      var tr = document.createElement('tr');
+      if (editingEventId === ev.id) tr.className = 'active';
+      tr.innerHTML =
+        '<td>' +
+        ev.sort_order +
+        '</td><td>' +
+        escapeHtml(ev.title) +
+        '</td><td><span class="badge ' +
+        (ev.visible ? 'on' : 'off') +
+        '">' +
+        (ev.visible ? '顯示' : '隱藏') +
+        '</span></td><td>編輯</td>';
+      tr.addEventListener('click', function () {
+        fillEventEditor(ev);
+        renderEventTable();
+      });
+      eventTbody.appendChild(tr);
+    });
+  }
+
+  async function loadEvents() {
+    var data = await api('/api/events?all=1');
+    events = data.events || [];
+    renderEventTable();
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(function (btn) {
+      btn.classList.toggle('is-active', btn.getAttribute('data-tab') === name);
+    });
+    document.getElementById('tab-stores').hidden = name !== 'stores';
+    document.getElementById('tab-events').hidden = name !== 'events';
+    if (name === 'events') {
+      loadEvents().catch(function (err) {
+        showStatus(err.message || '活動載入失敗', true);
+      });
+    }
+  }
+
+  document.querySelectorAll('.tab').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      switchTab(btn.getAttribute('data-tab'));
+    });
+  });
+
+  newEventBtn.addEventListener('click', function () {
+    resetEventEditor();
+    eventEditor.hidden = false;
+    renderEventTable();
+  });
+
+  eventCancelBtn.addEventListener('click', function () {
+    eventEditor.hidden = true;
+    resetEventEditor();
+    renderEventTable();
+  });
+
+  field('e-image-file').addEventListener('change', async function () {
+    try {
+      var file = field('e-image-file').files && field('e-image-file').files[0];
+      if (!file) return;
+      var data = await uploadOne(file);
+      field('e-image-url').value = data.url;
+      setEventImagePreview(data.url);
+      field('e-image-file').value = '';
+      showStatus('活動圖片已上傳');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  eventEditor.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var payload = collectEventPayload();
+    if (!payload.title) {
+      showStatus('請填寫活動標題', true);
+      return;
+    }
+    try {
+      if (editingEventId) {
+        await api('/api/events/' + editingEventId, { method: 'PUT', json: payload });
+        showStatus('已更新活動');
+      } else {
+        await api('/api/events', { method: 'POST', json: payload });
+        showStatus('已新增活動');
+      }
+      await loadEvents();
+      eventEditor.hidden = true;
+      resetEventEditor();
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  eventDeleteBtn.addEventListener('click', async function () {
+    if (!editingEventId) return;
+    if (!confirm('確定刪除此活動？此操作無法復原。')) return;
+    try {
+      await api('/api/events/' + editingEventId, { method: 'DELETE' });
+      showStatus('已刪除活動');
+      eventEditor.hidden = true;
+      resetEventEditor();
+      await loadEvents();
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
   // boot
   api('/api/login')
     .then(function (data) {

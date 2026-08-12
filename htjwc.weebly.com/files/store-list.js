@@ -9,8 +9,7 @@
   };
 
   function esc(s) {
-    return String(s == null ? ''
-      : s)
+    return String(s == null ? '' : s)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -21,154 +20,149 @@
     return esc(s).replace(/\n/g, '<br />');
   }
 
-  function buildTextHtml(store) {
-    var parts = [];
-    parts.push(
-      '<strong style="color:rgb(48, 48, 48)">特約商家店名：' +
-        esc(store.name) +
-        '</strong>'
-    );
-    if (store.address) {
-      parts.push(
-        '<span style="color:rgb(48, 48, 48)">地址：</span>' + esc(store.address)
-      );
-    }
-    var mid = [];
-    if (store.phone) mid.push('電話：' + esc(store.phone));
-    if (store.hours) mid.push('營業時間：' + esc(store.hours));
-    if (store.transport) mid.push('交通：' + esc(store.transport));
-    if (mid.length) {
-      parts.push('<font color="#2a2a2a">' + mid.join('<br />') + '</font>');
-    }
-    if (store.services) {
-      parts.push(
-        '<span style="color:rgb(48, 48, 48)">服務項目：</span>' + esc(store.services)
-      );
-    }
-    if (store.description) {
-      parts.push(nl2br(store.description));
-    }
-    if (store.notes) {
-      parts.push('備註：' + esc(store.notes));
-    }
-    if (store.discount) {
-      parts.push(
-        '<font color="#5040ae"><strong>優惠內容：' +
-          esc(store.discount) +
-          '</strong></font>'
-      );
-    }
-    return '<div class="paragraph">' + parts.join('<br />') + '</div>';
-  }
-
   function storeImages(store) {
     if (Array.isArray(store.images) && store.images.length) return store.images;
     if (store.image_url) return [store.image_url];
     return [];
   }
 
-  function buildImageHtml(store) {
-    var images = storeImages(store);
-    if (!images.length && !store.website) {
-      return '<div></div>';
-    }
+  function pad(n) {
+    return n < 10 ? '0' + n : String(n);
+  }
 
-    var imgs = images
-      .map(function (url, idx) {
-        var tag =
+  function decodeName(s) {
+    var raw = String(s == null ? '' : s);
+    if (!raw) return '';
+    try {
+      if (/%[0-9a-fA-F]{2}/.test(raw)) return decodeURIComponent(raw.replace(/\+/g, ' '));
+    } catch (e) {}
+    return raw;
+  }
+
+  function section(title, bodyHtml, extraClass) {
+    if (!bodyHtml) return '';
+    return (
+      '<section class="store-block' +
+      (extraClass ? ' ' + extraClass : '') +
+      '">' +
+      (title ? '<h4 class="store-block-title">' + esc(title) + '</h4>' : '') +
+      '<div class="store-block-body">' +
+      bodyHtml +
+      '</div></section>'
+    );
+  }
+
+  function metaRows(items) {
+    var rows = items
+      .filter(function (it) {
+        return it.value;
+      })
+      .map(function (it) {
+        return (
+          '<div class="store-row">' +
+          '<span class="store-row-label">' +
+          esc(it.label) +
+          '</span>' +
+          '<span class="store-row-value">' +
+          esc(it.value) +
+          '</span></div>'
+        );
+      })
+      .join('');
+    return rows;
+  }
+
+  function buildStoreBlock(store, index) {
+    var images = storeImages(store);
+
+    var infoHtml = metaRows([
+      { label: '地址', value: store.address },
+      { label: '電話', value: store.phone },
+      { label: '營業時間', value: store.hours },
+      { label: '交通', value: store.transport },
+      { label: '服務項目', value: store.services },
+    ]);
+
+    var descHtml = store.description ? '<p>' + nl2br(store.description) + '</p>' : '';
+    var discountHtml = store.discount ? '<p>' + nl2br(store.discount) + '</p>' : '';
+    var notesHtml = store.notes ? '<p>' + nl2br(store.notes) + '</p>' : '';
+
+    var linkItems = [];
+    if (store.website) {
+      linkItems.push(
+        '<a class="store-link store-link-web" href="' +
+          esc(store.website) +
+          '" target="_blank" rel="noopener">' +
+          '<span class="store-link-label">網站</span>' +
+          '<span class="store-link-text">' +
+          esc(store.website.replace(/^https?:\/\//, '')) +
+          '</span></a>'
+      );
+    }
+    if (store.pdf_url) {
+      linkItems.push(
+        '<a class="store-link store-link-pdf" href="' +
+          esc(store.pdf_url) +
+          '" target="_blank" rel="noopener">' +
+          '<span class="store-link-label">PDF</span>' +
+          '<span class="store-link-text">' +
+          esc(decodeName(store.pdf_name) || '下載檔案') +
+          '</span></a>'
+      );
+    }
+    var linksHtml = linkItems.length
+      ? '<div class="store-links">' + linkItems.join('') + '</div>'
+      : '';
+
+    var media = images
+      .map(function (url) {
+        return (
           '<img src="' +
           esc(url) +
           '" alt="' +
           esc(store.name) +
-          (images.length > 1 ? ' (' + (idx + 1) + ')' : '') +
-          '" style="width:auto;max-width:100%;margin-bottom:' +
-          (idx < images.length - 1 ? '10px' : '0') +
-          ';" />';
-        if (store.website && idx === 0) {
-          return (
-            '<a href="' +
-            esc(store.website) +
-            '" target="_blank" rel="noopener">' +
-            tag +
-            '</a>'
-          );
-        }
-        return tag;
+          '" loading="lazy" />'
+        );
       })
       .join('');
 
-    if (!imgs && store.website) {
-      imgs =
-        '<a href="' +
-        esc(store.website) +
-        '" target="_blank" rel="noopener">' +
-        esc(store.website) +
-        '</a>';
-    }
-
     return (
-      '<div><div class="wsite-image wsite-image-border-none " style="padding-top:10px;padding-bottom:10px;margin-left:0px;margin-right:0px;text-align:center">' +
-      imgs +
-      '<div style="display:block;font-size:90%"></div></div></div>'
-    );
-  }
-
-  function buildPdfHtml(store) {
-    if (!store.pdf_url) return '';
-    var title = store.pdf_name || '下載檔案';
-    return (
-      '<div><div style="margin: 10px 0 0 -10px">' +
-      '<a title="下載檔案：' +
-      esc(title) +
-      '" href="' +
-      esc(store.pdf_url) +
-      '">' +
-      '<img src="../www.weebly.com/weebly/images/file_icons/pdf.png" width="36" height="36" style="float: left; position: relative; left: 0px; top: 0px; margin: 0 15px 15px 0; border: 0;" onerror="this.style.display=\'none\'" />' +
-      '</a>' +
-      '<div style="float: left; text-align: left; position: relative;">' +
-      '<table style="font-size: 12px; font-family: tahoma; line-height: .9;"><tr><td colspan="2"><b> ' +
-      esc(title) +
-      '</b></td></tr></table>' +
-      '<a title="下載檔案：' +
-      esc(title) +
-      '" href="' +
-      esc(store.pdf_url) +
-      '" style="font-weight: bold;">Download File</a></div></div>' +
-      '<hr style="clear: both; width: 100%; visibility: hidden"></hr></div>'
-    );
-  }
-
-  function buildStoreBlock(store) {
-    var spacer =
-      '<div><div style="height: 20px; overflow: hidden; width: 100%;"></div>' +
-      '<hr class="styled-hr" style="width:100%;"></hr>' +
-      '<div style="height: 20px; overflow: hidden; width: 100%;"></div></div>';
-
-    var left = buildTextHtml(store) + buildPdfHtml(store);
-    var right = buildImageHtml(store);
-
-    return (
-      spacer +
-      '<div><div class="wsite-multicol"><div class="wsite-multicol-table-wrap" style="margin:0 -15px;">' +
-      '<table class="wsite-multicol-table"><tbody class="wsite-multicol-tbody">' +
-      '<tr class="wsite-multicol-tr">' +
-      '<td class="wsite-multicol-col" style="width:50%; padding:0 15px;">' +
-      left +
-      '</td>' +
-      '<td class="wsite-multicol-col" style="width:50%; padding:0 15px;">' +
-      right +
-      '</td>' +
-      '</tr></tbody></table></div></div></div>'
+      '<article class="store-item">' +
+      '<div class="store-main">' +
+      '<header class="store-header">' +
+      '<span class="store-index">STORE ' +
+      pad(index + 1) +
+      '</span>' +
+      '<h3 class="store-name">' +
+      esc(store.name) +
+      '</h3>' +
+      '</header>' +
+      section('基本資訊', infoHtml, 'store-block-info') +
+      section('店家介紹', descHtml, 'store-block-desc') +
+      section('優惠內容', discountHtml, 'store-block-discount') +
+      section('備註', notesHtml, 'store-block-notes') +
+      section('相關連結', linksHtml, 'store-block-links') +
+      '</div>' +
+      '<div class="store-side">' +
+      '<div class="store-media">' +
+      (media || '<div class="store-media-empty"></div>') +
+      '</div>' +
+      '</div>' +
+      '</article>'
     );
   }
 
   function render(container, stores) {
     if (!stores.length) {
-      container.innerHTML =
-        '<div class="paragraph" style="padding:20px 0;">目前此分類尚無店家資料。</div>';
+      container.innerHTML = '<div class="store-empty">目前此分類尚無店家資料</div>';
       return;
     }
-    container.innerHTML = stores.map(buildStoreBlock).join('');
+    container.innerHTML = stores
+      .map(function (s, i) {
+        return buildStoreBlock(s, i);
+      })
+      .join('');
+    if (typeof window.htjwcObserveStores === 'function') window.htjwcObserveStores();
   }
 
   function ready(fn) {
@@ -181,16 +175,13 @@
     if (!el) return;
     var category = el.getAttribute('data-category');
     if (!category) {
-      el.innerHTML = '<div class="paragraph">缺少分類設定</div>';
+      el.innerHTML = '<div class="store-error">缺少分類設定</div>';
       return;
     }
-    el.innerHTML =
-      '<div class="paragraph" style="padding:20px 0;">載入店家資料中…</div>';
-
-    var url = '/api/stores?category=' + encodeURIComponent(category);
-    fetch(url)
+    el.innerHTML = '<div class="store-loading">LOADING STORES…</div>';
+    fetch('/api/stores?category=' + encodeURIComponent(category))
       .then(function (r) {
-        if (!r.ok) throw new Error('load failed');
+        if (!r.ok) throw new Error('fail');
         return r.json();
       })
       .then(function (data) {
@@ -198,8 +189,8 @@
       })
       .catch(function () {
         el.innerHTML =
-          '<div class="paragraph" style="padding:20px 0;color:#a00;">店家資料載入失敗，請稍後再試。' +
-          (CATEGORY_LABELS[category] ? '（' + CATEGORY_LABELS[category] + '）' : '') +
+          '<div class="store-error">店家資料載入失敗' +
+          (CATEGORY_LABELS[category] ? ' — ' + CATEGORY_LABELS[category] : '') +
           '</div>';
       });
   });

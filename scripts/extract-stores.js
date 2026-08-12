@@ -163,6 +163,13 @@ function extractStoresFromHtml(html, categoryId) {
       pdfUrl = pdfMatch[1];
       pdfName = decodeEntities(pdfMatch[2] || path.basename(pdfUrl));
       pdfName = pdfName.replace(/^下載檔案：/, '');
+      try {
+        if (/%[0-9a-fA-F]{2}/.test(pdfName)) {
+          pdfName = decodeURIComponent(pdfName.replace(/\+/g, ' '));
+        }
+      } catch {
+        // keep raw
+      }
     }
 
     const address = fieldAfter(text, '地址');
