@@ -765,15 +765,15 @@ body.honda-home-page #wsite-content {
   display: grid !important;
 }
 
-/* Old button fallback styling if JS fails */
-a.wsite-button {
+/* Old button fallback styling if JS fails — category hub only */
+.honda-cats-ready a.wsite-button {
   display: block !important;
   margin: 0 0 12px !important;
   background: none !important;
   text-decoration: none !important;
 }
 
-.wsite-button-inner {
+.honda-cats-ready .wsite-button-inner {
   display: block !important;
   width: 100%;
   padding: 22px 24px !important;
@@ -787,6 +787,136 @@ a.wsite-button {
   font-weight: 600 !important;
   letter-spacing: 0.06em !important;
   text-transform: none !important;
+}
+
+/* ========== CONTACT FORM ========== */
+body.wsite-page-contact .wsite-multicol-table-wrap {
+  margin: 0 !important;
+}
+
+body.wsite-page-contact .wsite-multicol-table,
+body.wsite-page-contact .wsite-multicol-tbody,
+body.wsite-page-contact .wsite-multicol-tr {
+  display: block;
+  width: 100%;
+}
+
+body.wsite-page-contact .wsite-multicol-col {
+  display: none !important;
+  width: auto !important;
+  padding: 0 !important;
+}
+
+body.wsite-page-contact .wsite-multicol-col:nth-child(2) {
+  display: block !important;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+body.wsite-page-contact .wsite-form-container,
+body.wsite-page-contact .formlist,
+body.wsite-page-contact .wsite-form-field {
+  width: 100%;
+  max-width: 100%;
+}
+
+body.wsite-page-contact .wsite-form-label {
+  display: block;
+  margin: 0 0 8px;
+  padding: 0;
+  font-family: 'Noto Sans TC', sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--black) !important;
+  line-height: 1.5 !important;
+}
+
+body.wsite-page-contact .wsite-form-fields-required-label {
+  margin-bottom: 20px;
+  color: var(--gray-600) !important;
+  font-size: 13px !important;
+}
+
+body.wsite-page-contact .wsite-name-field {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+body.wsite-page-contact .wsite-form-left,
+body.wsite-page-contact .wsite-form-right {
+  float: none !important;
+  width: calc(50% - 6px) !important;
+  flex: 1 1 220px;
+  margin: 0 !important;
+}
+
+body.wsite-page-contact .wsite-form-input-container {
+  width: 100%;
+}
+
+body.wsite-page-contact .wsite-form-input,
+body.wsite-page-contact input.wsite-form-input,
+body.wsite-page-contact textarea.wsite-form-input {
+  display: block;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: 46px;
+  margin: 0 0 16px !important;
+  padding: 10px 14px !important;
+  box-sizing: border-box;
+  background: var(--white) !important;
+  color: var(--black) !important;
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 0 !important;
+  font-family: 'Noto Sans TC', sans-serif !important;
+  font-size: 15px !important;
+  line-height: 1.4 !important;
+}
+
+body.wsite-page-contact textarea.wsite-form-input {
+  height: 160px !important;
+  min-height: 160px;
+  resize: vertical;
+}
+
+body.wsite-page-contact .wsite-form-input:focus {
+  outline: none;
+  border-color: var(--honda-red) !important;
+}
+
+body.wsite-page-contact form > div[style*="text-align:center"] {
+  text-align: left !important;
+  margin-top: 8px !important;
+}
+
+body.wsite-page-contact a.wsite-button {
+  display: inline-block !important;
+  width: auto !important;
+  margin: 0 !important;
+  background: var(--honda-red) !important;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+body.wsite-page-contact .wsite-button-inner {
+  display: inline-block !important;
+  width: auto !important;
+  padding: 12px 28px !important;
+  background: var(--honda-red) !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-left: 0 !important;
+  border-radius: 0 !important;
+  font-family: 'Noto Sans TC', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: none !important;
+}
+
+body.wsite-page-contact a.wsite-button:hover .wsite-button-inner {
+  background: var(--honda-red-dark) !important;
 }
 
 /* ========== STORE LIST ========== */
