@@ -366,53 +366,25 @@ body .content-wrap {
 /* ========== HOME LAYOUT (rebuilt) ========== */
 .home-hero {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
-  background: var(--black);
-  overflow: hidden;
-  min-height: min(72vh, 760px);
+  width: min(100% - 48px, var(--max));
+  margin: 16px auto 0;
+  background: transparent;
+  overflow: visible;
 }
 
 .home-hero img {
   display: block;
   width: 100%;
-  height: min(72vh, 760px);
-  object-fit: cover;
-  object-position: center 20%;
-  filter: grayscale(0.35) contrast(1.05) brightness(0.72);
-  transform: scale(1.02);
+  height: auto;
 }
 
-.home-hero::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: var(--honda-red);
-  z-index: 2;
-}
-
+.home-hero::before,
 .home-hero::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.35) 48%, rgba(0, 0, 0, 0.55) 100%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.2) 0%, transparent 30%, rgba(0, 0, 0, 0.85) 100%);
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 .home-hero-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  display: flex;
-  align-items: flex-end;
-  padding: 56px 24px 56px;
-  color: #fff;
+  display: none;
 }
 
 .home-hero-inner {
@@ -627,8 +599,8 @@ body.honda-home-page #wsite-content {
 .home-happygo {
   display: block;
   position: relative;
-  width: 100vw;
-  margin: 0 0 0 calc(50% - 50vw);
+  width: min(100% - 48px, 760px);
+  margin: 20px auto 0;
   text-decoration: none !important;
   background: #f7f4ef;
   transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
@@ -1458,8 +1430,12 @@ body.honda-events-page .content-wrap {
     display: none;
   }
 
-  .home-hero img {
-    height: 52vh;
+  .home-hero {
+    width: min(100% - 32px, var(--max));
+  }
+
+  .home-happygo {
+    width: min(100% - 32px, 760px);
   }
 
   .home-happygo-cta {
