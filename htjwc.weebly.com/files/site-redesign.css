@@ -366,7 +366,7 @@ body .content-wrap {
 /* ========== HOME LAYOUT (rebuilt) ========== */
 .home-hero {
   position: relative;
-  width: min(100% - 48px, var(--max));
+  width: min(100% - 48px, 1320px);
   margin: 16px auto 0;
   background: transparent;
   overflow: visible;
@@ -599,7 +599,7 @@ body.honda-home-page #wsite-content {
 .home-happygo {
   display: block;
   position: relative;
-  width: min(100% - 48px, 760px);
+  width: min(100% - 48px, 1320px);
   margin: 20px auto 0;
   text-decoration: none !important;
   background: #f7f4ef;
