@@ -184,7 +184,15 @@
     var happyGoHtml =
       '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
       '<img src="files/honda-happygo-banner.png" alt="台灣本田聯合福委會特約商店優惠平台 — 本田開心購" />' +
+      '<span class="home-happygo-actions">' +
+      '<span class="home-happygo-badge">' +
+      '<svg class="home-happygo-badge-icon" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path fill="currentColor" d="M3 6h11v10H3V6zm12 3h3.2L21 12.2V16h-6V9zM6 18a2 2 0 1 0 .001 3.999A2 2 0 0 0 6 18zm12 0a2 2 0 1 0 .001 3.999A2 2 0 0 0 18 18z"/>' +
+      '</svg>' +
+      '<span class="home-happygo-badge-text"><small>全館消費滿額</small><strong>免運費</strong></span>' +
+      '</span>' +
       '<span class="home-happygo-cta">點擊前往<span aria-hidden="true"> →</span></span>' +
+      '</span>' +
       '</a>';
 
     var shell = document.createElement('div');
