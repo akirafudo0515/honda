@@ -192,17 +192,17 @@
     shell.innerHTML =
       happyGoHtml +
       '<section class="home-hero reveal">' +
+      '<div class="home-hero-heading">' +
+      '<div class="eyebrow">Honda Taiwan Joint Welfare Committee</div>' +
+      '<h1>台灣本田聯合福委會<br />特約商店公佈欄</h1>' +
+      '<p class="hero-sub">Official Partner Store Directory</p>' +
+      '</div>' +
       (heroSrc
         ? '<img src="' +
           heroSrc +
           '" alt="台灣本田聯合福委會 特約商店公佈欄" />'
         : '') +
-      '<div class="home-hero-overlay">' +
-      '<div class="home-hero-inner">' +
-      '<div class="eyebrow">Honda Taiwan Joint Welfare Committee</div>' +
-      '<h1>台灣本田聯合福委會<br />特約商店公佈欄</h1>' +
-      '<p class="hero-sub">Official Partner Store Directory</p>' +
-      '</div></div></section>' +
+      '</section>' +
       '<section class="home-shell">' +
       '<div class="home-kicker reveal">Official Notice</div>' +
       '<h2 class="home-lead-title reveal">' +
