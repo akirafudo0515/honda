@@ -608,20 +608,20 @@ body.honda-home-page #wsite-content {
 .home-happygo-cta {
   position: absolute;
   right: 2.2%;
-  bottom: 14.8%;
+  bottom: 7.5%;
   left: auto;
   top: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 20%;
-  height: 8%;
+  width: 23.5%;
+  height: 10.5%;
   padding: 0;
   background: #fffaf2;
   color: #1a4d39 !important;
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: clamp(13px, 1.4vw, 18px);
+  font-size: clamp(15px, 1.7vw, 22px);
   font-weight: 800;
   letter-spacing: 0.08em;
   line-height: 1;
@@ -1437,10 +1437,10 @@ body.honda-events-page .content-wrap {
 
   .home-happygo-cta {
     right: 2.2%;
-    bottom: 14.8%;
-    width: 20%;
-    height: 8%;
-    font-size: 12px;
+    bottom: 7.5%;
+    width: 23.5%;
+    height: 10.5%;
+    font-size: 13px;
   }
 
   .home-reqs {
