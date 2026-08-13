@@ -181,9 +181,15 @@
     var endMark = content.querySelector('img[src*="6-removebg"]');
     if (endMark) endSrc = endMark.getAttribute('src');
 
+    var happyGoHtml =
+      '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
+      '<img src="files/honda-happygo-banner.png" alt="台灣本田聯合福委會特約商店優惠平台 — 本田開心購" />' +
+      '</a>';
+
     var shell = document.createElement('div');
     shell.className = 'honda-home';
     shell.innerHTML =
+      happyGoHtml +
       '<section class="home-hero reveal">' +
       (heroSrc
         ? '<img src="' +
@@ -226,9 +232,6 @@
           '</div>'
         : '') +
       (afterHtml ? '<div class="home-body home-body-after reveal">' + afterHtml + '</div>' : '') +
-      '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
-      '<img src="files/honda-happygo-banner.png" alt="台灣本田聯合福委會特約商店優惠平台 — 本田開心購" />' +
-      '</a>' +
       (line
         ? '<div class="home-cta-band reveal"><div><span class="cta-kicker">Line Official</span><p>加入官方 Line@，掌握最新特約優惠資訊</p></div>' +
           line.innerHTML +
