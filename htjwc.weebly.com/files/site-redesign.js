@@ -184,6 +184,7 @@
     var happyGoHtml =
       '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
       '<img src="files/honda-happygo-banner.png" alt="台灣本田聯合福委會特約商店優惠平台 — 本田開心購" />' +
+      '<span class="home-happygo-cta">點擊前往<span aria-hidden="true"> →</span></span>' +
       '</a>';
 
     var shell = document.createElement('div');

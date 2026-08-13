@@ -641,9 +641,36 @@ body.honda-home-page #wsite-content {
   max-width: 100%;
 }
 
+.home-happygo-cta {
+  position: absolute;
+  left: 5.5%;
+  top: 54%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7em 1.5em;
+  background: var(--honda-red);
+  color: #fff !important;
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: clamp(13px, 1.5vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  border-radius: 999px;
+  box-shadow: 0 10px 24px rgba(230, 0, 18, 0.32);
+  pointer-events: none;
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
 .home-happygo:hover {
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
   transform: translateY(-2px);
+}
+
+.home-happygo:hover .home-happygo-cta {
+  background: var(--honda-red-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(184, 0, 14, 0.4);
 }
 
 .home-gallery {
@@ -1433,6 +1460,19 @@ body.honda-events-page .content-wrap {
 
   .home-hero img {
     height: 52vh;
+  }
+
+  .home-happygo-cta {
+    left: 50%;
+    top: auto;
+    bottom: 7%;
+    transform: translateX(-50%);
+    padding: 0.85em 1.6em;
+    font-size: 14px;
+  }
+
+  .home-happygo:hover .home-happygo-cta {
+    transform: translateX(-50%) translateY(-1px);
   }
 
   .home-reqs {
