@@ -118,7 +118,7 @@ a {
 .honda-brand-logo {
   flex: 0 0 auto;
   display: block;
-  height: 44px;
+  height: 52px;
   width: auto;
   background: transparent;
 }
@@ -1434,7 +1434,7 @@ body.honda-events-page .content-wrap {
   }
 
   .honda-brand-logo {
-    height: 32px;
+    height: 40px;
   }
 
   .honda-brand-text span {
