@@ -120,7 +120,7 @@ a {
   display: block;
   height: 44px;
   width: auto;
-  background: #000;
+  background: transparent;
 }
 
 .honda-brand-text {
