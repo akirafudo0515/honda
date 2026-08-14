@@ -118,8 +118,9 @@ a {
 .honda-brand-logo {
   flex: 0 0 auto;
   display: block;
-  height: 40px;
+  height: 44px;
   width: auto;
+  background: #000;
 }
 
 .honda-brand-text {
