@@ -582,13 +582,15 @@ body.honda-home-page #wsite-content {
 }
 
 .home-happygo {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   position: relative;
-  width: min(100% - 48px, 1320px);
+  width: min(100% - 32px, 880px);
   margin: 20px auto 0;
   text-decoration: none !important;
-  background: #f7f4ef;
-  transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+  background: transparent;
+  transition: transform 0.3s var(--ease);
 }
 
 .home-happygo img {
@@ -596,31 +598,30 @@ body.honda-home-page #wsite-content {
   width: 100%;
   height: auto;
   max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
 .home-happygo-cta {
-  position: absolute;
-  right: 2.2%;
-  bottom: 4.2%;
-  left: auto;
-  top: auto;
+  position: static;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 23.5%;
-  height: 10.5%;
-  padding: 0;
-  background: #fffaf2;
-  color: #1a4d39 !important;
+  width: min(100%, 520px);
+  height: auto;
+  margin-top: 22px;
+  padding: 18px 28px;
+  background: #c41e3a;
+  color: #fff !important;
   font-family: 'Noto Sans TC', sans-serif;
-  font-size: clamp(15px, 1.7vw, 22px);
+  font-size: clamp(22px, 4.6vw, 34px);
   font-weight: 800;
-  letter-spacing: 0.08em;
-  line-height: 1;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
   border-radius: 999px;
-  border: 2px solid #c9a84c;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+  border: 0;
+  box-shadow: 0 10px 24px rgba(196, 30, 58, 0.35);
   pointer-events: none;
   transition: background 0.25s var(--ease), transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
@@ -631,8 +632,9 @@ body.honda-home-page #wsite-content {
 }
 
 .home-happygo:hover .home-happygo-cta {
-  background: #fff3d6;
+  background: #a31830;
   transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(196, 30, 58, 0.42);
 }
 
 body.honda-mall-page .content-wrap .container,
@@ -649,6 +651,8 @@ body.honda-mall-page #wsite-content {
 .mall-page .home-happygo {
   margin: 0 auto;
 }
+
+.home-gallery {
   width: min(100% - 48px, var(--max));
   margin: 0 auto 64px;
 }
@@ -1442,15 +1446,14 @@ body.honda-events-page .content-wrap {
   }
 
   .mall-page .home-happygo {
-    width: min(100% - 32px, 760px);
+    width: min(100% - 24px, 880px);
   }
 
   .home-happygo-cta {
-    right: 2.2%;
-    bottom: 4.2%;
-    width: 23.5%;
-    height: 10.5%;
-    font-size: 13px;
+    width: 100%;
+    margin-top: 16px;
+    padding: 16px 20px;
+    font-size: 22px;
   }
 
   .home-reqs {
