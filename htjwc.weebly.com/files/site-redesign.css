@@ -115,19 +115,11 @@ a {
   min-width: 0;
 }
 
-.honda-brand-mark {
+.honda-brand-logo {
   flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 28px;
-  padding: 0 10px;
-  background: var(--honda-red);
-  color: #fff;
-  font-family: 'Roboto', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  display: block;
+  height: 40px;
+  width: auto;
 }
 
 .honda-brand-text {
@@ -1434,6 +1426,10 @@ body.honda-events-page .content-wrap {
 @media (max-width: 640px) {
   :root {
     --header: 58px;
+  }
+
+  .honda-brand-logo {
+    height: 32px;
   }
 
   .honda-brand-text span {

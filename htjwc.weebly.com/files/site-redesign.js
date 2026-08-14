@@ -57,7 +57,7 @@
     header.innerHTML =
       '<div class="honda-header-inner">' +
       '<a class="honda-brand" href="index.html">' +
-      '<span class="honda-brand-mark">HONDA</span>' +
+      '<img class="honda-brand-logo" src="files/htjwc-logo.png" alt="HTJWC" />' +
       '<span class="honda-brand-text">' +
       '<strong>台灣本田聯合福委會</strong>' +
       '<span>特約商店公佈欄</span>' +
