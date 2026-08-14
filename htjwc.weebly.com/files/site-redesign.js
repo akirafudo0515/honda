@@ -463,7 +463,7 @@
     content.innerHTML =
       '<div class="mall-page">' +
       '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
-      '<img src="files/honda-happygo-banner.png?v=20260814c" alt="台灣本田聯合福委會特約商店優惠平台 — 購物商城" />' +
+      '<img src="files/honda-happygo-banner.png?v=20260815b" alt="台灣本田聯合福委會特約商店優惠平台 — 購物商城" />' +
       '<span class="home-happygo-cta">點擊前往<span aria-hidden="true"> →</span></span>' +
       '</a>' +
       '</div>';
