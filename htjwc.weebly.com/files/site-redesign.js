@@ -2,6 +2,7 @@
   var NAV = [
     { href: 'index.html', label: '使用說明' },
     { href: '293053200421830242152099839006.html', label: '商店分類' },
+    { href: 'mall.html', label: '購物商城' },
     { href: '2930532004242152347823560236602796321205.html', label: '專屬活動' },
     { href: '229142030925104288582148828771264123000029305320042421523478.html', label: '成為特約店家' },
     { href: 'contact.html', label: 'CONTACT' },
@@ -181,16 +182,9 @@
     var endMark = content.querySelector('img[src*="6-removebg"]');
     if (endMark) endSrc = endMark.getAttribute('src');
 
-    var happyGoHtml =
-      '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
-      '<img src="files/honda-happygo-banner.png" alt="台灣本田聯合福委會特約商店優惠平台 — 本田開心購" />' +
-      '<span class="home-happygo-cta">點擊前往<span aria-hidden="true"> →</span></span>' +
-      '</a>';
-
     var shell = document.createElement('div');
     shell.className = 'honda-home';
     shell.innerHTML =
-      happyGoHtml +
       '<section class="home-hero reveal">' +
       '<div class="home-hero-heading">' +
       '<div class="eyebrow">Honda Taiwan Joint Welfare Committee</div>' +
@@ -457,9 +451,28 @@
       });
   }
 
+  function rebuildMallPage() {
+    var page = fileName();
+    if (page !== 'mall.html' && page.indexOf('mall') !== 0) return;
+    if (document.body.getAttribute('data-honda-mall') === '1') return;
+    document.body.setAttribute('data-honda-mall', '1');
+    document.body.classList.add('honda-mall-page');
+
+    var content = document.getElementById('wsite-content');
+    if (!content) return;
+    content.innerHTML =
+      '<div class="mall-page">' +
+      '<a class="home-happygo reveal" href="https://ai4.ysdt.com.tw/htwhappygo" target="_blank" rel="noopener" aria-label="前往本田開心購">' +
+      '<img src="files/honda-happygo-banner.png" alt="台灣本田聯合福委會特約商店優惠平台 — 購物商城" />' +
+      '<span class="home-happygo-cta">點擊前往<span aria-hidden="true"> →</span></span>' +
+      '</a>' +
+      '</div>';
+  }
+
   function enhanceInteriorPages() {
     if (document.body.classList.contains('wsite-page-index')) return;
     if (document.body.classList.contains('honda-events-page')) return;
+    if (document.body.classList.contains('honda-mall-page')) return;
 
     var banner = document.querySelector('.wsite-header-section, .banner-wrap');
     if (banner) banner.classList.add('honda-page-banner');
@@ -511,6 +524,7 @@
     rebuildHome();
     rebuildCategoryHub();
     rebuildEventsPage();
+    rebuildMallPage();
     enhanceInteriorPages();
     observe();
     setTimeout(observe, 700);

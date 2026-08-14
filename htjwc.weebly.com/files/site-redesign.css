@@ -642,7 +642,20 @@ body.honda-home-page #wsite-content {
   transform: translateY(-1px);
 }
 
-.home-gallery {
+body.honda-mall-page .content-wrap .container,
+body.honda-mall-page #wsite-content {
+  max-width: none !important;
+  padding: 0 !important;
+  width: 100% !important;
+}
+
+.mall-page {
+  padding: 24px 0 80px;
+}
+
+.mall-page .home-happygo {
+  margin: 0 auto;
+}
   width: min(100% - 48px, var(--max));
   margin: 0 auto 64px;
 }
@@ -1431,7 +1444,7 @@ body.honda-events-page .content-wrap {
     width: min(100% - 32px, var(--max));
   }
 
-  .home-happygo {
+  .mall-page .home-happygo {
     width: min(100% - 32px, 760px);
   }
 
