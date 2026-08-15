@@ -586,7 +586,7 @@ body.honda-home-page #wsite-content {
   flex-direction: column;
   align-items: center;
   position: relative;
-  width: min(100% - 24px, 1180px);
+  width: min(100% - 24px, 920px);
   margin: 20px auto 0;
   text-decoration: none !important;
   background: transparent;
@@ -1446,7 +1446,7 @@ body.honda-events-page .content-wrap {
   }
 
   .mall-page .home-happygo {
-    width: min(100% - 16px, 1180px);
+    width: min(100% - 16px, 920px);
   }
 
   .home-happygo-cta {
