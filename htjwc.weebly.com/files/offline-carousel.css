@@ -54,13 +54,23 @@
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.45);
   color: #fff;
-  font-size: 24px;
+  font-size: 0;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
+}
+
+.offline-carousel-btn::before {
+  content: '';
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-top: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+  box-sizing: border-box;
 }
 
 .offline-carousel-btn:hover {
@@ -71,8 +81,18 @@
   left: 8px;
 }
 
+.offline-carousel-prev::before {
+  transform: rotate(-135deg);
+  margin-left: 3px;
+}
+
 .offline-carousel-next {
   right: 8px;
+}
+
+.offline-carousel-next::before {
+  transform: rotate(45deg);
+  margin-right: 3px;
 }
 
 .offline-carousel-dots {
@@ -106,6 +126,10 @@
   .offline-carousel-btn {
     width: 30px;
     height: 30px;
-    font-size: 20px;
+  }
+
+  .offline-carousel-btn::before {
+    width: 8px;
+    height: 8px;
   }
 }
