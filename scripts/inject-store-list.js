@@ -51,7 +51,7 @@ for (const [file, category] of files) {
 
   const replacement =
     "\n\t\t\t\t<div id=\"store-list\" data-category=\"" + category + "\"></div>\n" +
-    "\t\t\t\t<script src=\"files/store-list.js?v=20261102a\"></script>\n\t\t\t";
+    "\t\t\t\t<script src=\"files/store-list.js?v=20261102b\"></script>\n\t\t\t";
   html = html.slice(0, start) + replacement + html.slice(closeIdx);
   fs.writeFileSync(fp, html, "utf8");
   console.log("OK: " + category + " -> " + file);

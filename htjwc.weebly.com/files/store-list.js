@@ -184,7 +184,7 @@
   function storeMatches(store, region) {
     var value = store.region || 'all';
     if (region === 'all') return true;
-    return value === region || value === 'all';
+    return value === region;
   }
 
   function render(container, stores, region) {
