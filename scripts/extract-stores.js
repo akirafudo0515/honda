@@ -3,6 +3,7 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { classifyRegion } = require('./region');
 
 const ROOT = path.join(__dirname, '..', 'htjwc.weebly.com');
 
@@ -255,7 +256,7 @@ function main() {
     'DELETE FROM stores;',
     ...all.map((s) => {
       return (
-        'INSERT INTO stores (category, name, address, phone, hours, transport, services, description, discount, notes, website, image_url, image_urls, pdf_url, pdf_name, sort_order, visible) VALUES (' +
+        'INSERT INTO stores (category, name, address, phone, hours, transport, services, description, discount, notes, website, image_url, image_urls, pdf_url, pdf_name, sort_order, visible, region) VALUES (' +
         [
           s.category,
           s.name,
@@ -274,6 +275,7 @@ function main() {
           s.pdf_name,
           s.sort_order,
           s.visible,
+          classifyRegion(s),
         ]
           .map((v) => (typeof v === 'number' ? String(v) : `'${sqlEscape(v)}'`))
           .join(', ') +

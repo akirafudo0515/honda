@@ -1,4 +1,12 @@
 (function () {
+  var REGIONS = {
+    all: '全部',
+    north: '北',
+    central: '中',
+    south: '南',
+    east: '東',
+  };
+
   var CATEGORIES = {
     dining: '餐飲相關特約店家',
     cafe: '咖啡 · 點心 · 甜品類',
@@ -116,6 +124,7 @@
     editingId = null;
     field('store-id').value = '';
     field('f-category').value = filterCategory.value || 'dining';
+    field('f-region').value = 'all';
     field('f-name').value = '';
     field('f-address').value = '';
     field('f-phone').value = '';
@@ -142,6 +151,7 @@
     editingId = store.id;
     field('store-id').value = store.id;
     field('f-category').value = store.category || 'dining';
+    field('f-region').value = REGIONS[store.region] ? store.region : 'all';
     field('f-name').value = store.name || '';
     field('f-address').value = store.address || '';
     field('f-phone').value = store.phone || '';
@@ -174,6 +184,7 @@
     var sortRaw = field('f-sort').value;
     var payload = {
       category: field('f-category').value,
+      region: field('f-region').value || 'all',
       name: field('f-name').value.trim(),
       address: field('f-address').value.trim(),
       phone: field('f-phone').value.trim(),
@@ -204,7 +215,7 @@
     tbody.innerHTML = '';
     if (!list.length) {
       tbody.innerHTML =
-        '<tr><td colspan="5" style="color:#6b7280;padding:20px;">尚無店家</td></tr>';
+        '<tr><td colspan="6" style="color:#6b7280;padding:20px;">尚無店家</td></tr>';
       return;
     }
     list.forEach(function (s) {
@@ -217,6 +228,8 @@
         escapeHtml(s.name) +
         '</td><td>' +
         escapeHtml(CATEGORIES[s.category] || s.category) +
+        '</td><td>' +
+        escapeHtml(REGIONS[s.region] || '全部') +
         '</td><td><button type="button" class="badge ' +
         (s.visible ? 'on' : 'off') +
         '" data-visible-toggle="store" data-id="' +

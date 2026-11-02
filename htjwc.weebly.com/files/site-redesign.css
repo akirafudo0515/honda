@@ -933,6 +933,42 @@ body.wsite-page-contact a.wsite-button:hover .wsite-button-inner {
   padding-top: 12px;
 }
 
+.region-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 4px 0 28px;
+}
+
+.region-filter-btn {
+  appearance: none !important;
+  margin: 0 !important;
+  border: 1px solid var(--gray-200) !important;
+  border-radius: 0 !important;
+  background: var(--white) !important;
+  color: var(--black) !important;
+  font-family: 'Noto Sans TC', 'Roboto', sans-serif !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.14em !important;
+  line-height: 1 !important;
+  text-transform: none !important;
+  padding: 12px 22px !important;
+  cursor: pointer;
+  box-shadow: none !important;
+}
+
+.region-filter-btn.is-active {
+  background: var(--black) !important;
+  border-color: var(--black) !important;
+  color: var(--white) !important;
+}
+
+.region-filter-btn:hover:not(.is-active) {
+  border-color: var(--honda-red) !important;
+  color: var(--honda-red) !important;
+}
+
 .store-item {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(280px, 420px);

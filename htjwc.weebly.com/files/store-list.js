@@ -1,4 +1,12 @@
 (function () {
+  var REGIONS = [
+    { id: 'all', label: '全部' },
+    { id: 'north', label: '北' },
+    { id: 'central', label: '中' },
+    { id: 'south', label: '南' },
+    { id: 'east', label: '東' },
+  ];
+
   var CATEGORY_LABELS = {
     dining: '餐飲相關特約店家',
     cafe: '咖啡 · 點心 · 甜品類',
@@ -152,12 +160,48 @@
     );
   }
 
-  function render(container, stores) {
+  function regionBar(active) {
+    return (
+      '<div class="region-filter" role="tablist" aria-label="地區">' +
+      REGIONS.map(function (region) {
+        var on = region.id === active;
+        return (
+          '<button type="button" class="region-filter-btn' +
+          (on ? ' is-active' : '') +
+          '" role="tab" data-region="' +
+          region.id +
+          '" aria-selected="' +
+          (on ? 'true' : 'false') +
+          '">' +
+          region.label +
+          '</button>'
+        );
+      }).join('') +
+      '</div><div class="store-items"></div>'
+    );
+  }
+
+  function storeMatches(store, region) {
+    var value = store.region || 'all';
+    if (region === 'all') return true;
+    return value === region || value === 'all';
+  }
+
+  function render(container, stores, region) {
+    var items = container.querySelector('.store-items');
+    if (!items) return;
+    var filtered = stores.filter(function (store) {
+      return storeMatches(store, region);
+    });
     if (!stores.length) {
-      container.innerHTML = '<div class="store-empty">目前此分類尚無店家資料</div>';
+      items.innerHTML = '<div class="store-empty">目前此分類尚無店家資料</div>';
       return;
     }
-    container.innerHTML = stores
+    if (!filtered.length) {
+      items.innerHTML = '<div class="store-empty">此地區目前沒有店家</div>';
+      return;
+    }
+    items.innerHTML = filtered
       .map(function (s, i) {
         return buildStoreBlock(s, i);
       })
@@ -178,14 +222,29 @@
       el.innerHTML = '<div class="store-error">缺少分類設定</div>';
       return;
     }
-    el.innerHTML = '<div class="store-loading">LOADING STORES…</div>';
+    var activeRegion = 'all';
+    var loaded = [];
+    el.innerHTML = regionBar(activeRegion);
+    el.querySelector('.store-items').innerHTML = '<div class="store-loading">LOADING STORES…</div>';
+    el.addEventListener('click', function (event) {
+      var btn = event.target.closest('.region-filter-btn');
+      if (!btn || !el.contains(btn)) return;
+      activeRegion = btn.getAttribute('data-region') || 'all';
+      el.querySelectorAll('.region-filter-btn').forEach(function (node) {
+        var on = node === btn;
+        node.classList.toggle('is-active', on);
+        node.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      render(el, loaded, activeRegion);
+    });
     fetch('/api/stores?category=' + encodeURIComponent(category))
       .then(function (r) {
         if (!r.ok) throw new Error('fail');
         return r.json();
       })
       .then(function (data) {
-        render(el, data.stores || []);
+        loaded = data.stores || [];
+        render(el, loaded, activeRegion);
       })
       .catch(function () {
         el.innerHTML =

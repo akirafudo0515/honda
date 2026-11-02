@@ -16,7 +16,10 @@ const FIELDS = [
   'pdf_name',
   'sort_order',
   'visible',
+  'region',
 ];
+
+const REGIONS = new Set(['all', 'north', 'central', 'south', 'east']);
 
 function parseImages(row) {
   const urls = [];
@@ -73,6 +76,7 @@ export function rowToStore(row) {
   return {
     ...row,
     visible: !!row.visible,
+    region: REGIONS.has(row.region) ? row.region : 'all',
     images,
     image_url: images[0] || '',
     image_urls: JSON.stringify(images),
@@ -112,6 +116,10 @@ export function prepareStoreData(body, { partial = false } = {}) {
   }
   if (data.name !== undefined) data.name = String(data.name || '').trim();
   if (data.category !== undefined) data.category = String(data.category || '').trim();
+  if (data.region !== undefined || !partial) {
+    const region = String(data.region || 'all').trim();
+    data.region = REGIONS.has(region) ? region : 'all';
+  }
   if (data.pdf_name !== undefined) data.pdf_name = decodeMaybeUri(String(data.pdf_name || '').trim());
 
   return data;

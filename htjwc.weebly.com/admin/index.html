@@ -67,6 +67,7 @@
                     <th>排序</th>
                     <th>店名</th>
                     <th>分類</th>
+                    <th>地區</th>
                     <th>顯示</th>
                     <th></th>
                   </tr>
@@ -95,6 +96,17 @@
             <label>
               店名 *
               <input id="f-name" required maxlength="200" />
+            </label>
+
+            <label>
+              地區（選「全部」會出現在北、中、南、東每一個篩選）
+              <select id="f-region">
+                <option value="all">全部</option>
+                <option value="north">北</option>
+                <option value="central">中</option>
+                <option value="south">南</option>
+                <option value="east">東</option>
+              </select>
             </label>
 
             <label>
@@ -278,6 +290,6 @@
       </div>
     </section>
   </div>
-  <script src="admin.js?v=20260812d"></script>
+  <script src="admin.js?v=20261102a"></script>
 </body>
 </html>
