@@ -1229,7 +1229,7 @@ a.page-eyebrow {
 
 .promo-photo {
   width: min(100% - 48px, var(--max));
-  margin: 28px auto 8px;
+  margin: 28px auto 0;
 }
 
 .promo-photo img {
@@ -1250,7 +1250,16 @@ a.page-eyebrow {
 
 .promo-cats {
   width: min(100% - 48px, var(--max));
-  margin: 20px auto 80px;
+  margin: 36px auto 80px;
+}
+
+.promo-cats-title {
+  margin: 0 0 20px;
+  font-size: clamp(22px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
+  color: var(--black);
 }
 
 body.honda-promo-page #store-list {

@@ -480,7 +480,9 @@
       '<div class="promo-photo" id="promo-photo">' +
       '<div class="promo-photo-empty">頁面照片稍後更新</div>' +
       '</div>' +
-      '<div class="promo-cats"><div class="cat-grid" id="promo-cat-grid"></div></div>';
+      '<div class="promo-cats">' +
+      '<h2 class="promo-cats-title">本次活動參與店家</h2>' +
+      '<div class="cat-grid" id="promo-cat-grid"></div></div>';
 
     var grid = document.getElementById('promo-cat-grid');
     PROMO_CATS.forEach(function (c, i) {
