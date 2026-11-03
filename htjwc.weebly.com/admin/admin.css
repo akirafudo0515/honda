@@ -134,9 +134,17 @@ button.danger:hover { background: #991b1b; }
 
 .layout {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr);
   gap: 16px;
   align-items: start;
+}
+
+#tab-stores .layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#tab-stores .layout:has(#editor:not([hidden])) {
+  grid-template-columns: minmax(0, 1.1fr) minmax(320px, 1fr);
 }
 
 .list-card { overflow: auto; }
@@ -154,7 +162,9 @@ th, td {
   vertical-align: middle;
 }
 
-th { color: var(--muted); font-weight: 600; }
+th { color: var(--muted); font-weight: 600; white-space: nowrap; }
+
+#store-table { min-width: 760px; }
 
 tbody tr { cursor: pointer; }
 tbody tr:hover { background: #f8fafc; }
