@@ -39,3 +39,38 @@ CREATE TABLE IF NOT EXISTS events (
 
 CREATE INDEX IF NOT EXISTS idx_events_visible ON events(visible);
 CREATE INDEX IF NOT EXISTS idx_events_sort ON events(sort_order);
+
+CREATE TABLE IF NOT EXISTS promo_stores (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  category TEXT NOT NULL,
+  name TEXT NOT NULL,
+  address TEXT DEFAULT '',
+  phone TEXT DEFAULT '',
+  hours TEXT DEFAULT '',
+  transport TEXT DEFAULT '',
+  services TEXT DEFAULT '',
+  description TEXT DEFAULT '',
+  discount TEXT DEFAULT '',
+  notes TEXT DEFAULT '',
+  website TEXT DEFAULT '',
+  image_url TEXT DEFAULT '',
+  image_urls TEXT DEFAULT '[]',
+  pdf_url TEXT DEFAULT '',
+  pdf_name TEXT DEFAULT '',
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  visible INTEGER NOT NULL DEFAULT 1,
+  region TEXT NOT NULL DEFAULT 'all',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_promo_stores_category ON promo_stores(category);
+CREATE INDEX IF NOT EXISTS idx_promo_stores_visible ON promo_stores(visible);
+
+CREATE TABLE IF NOT EXISTS promo_settings (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  image_url TEXT DEFAULT '',
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+INSERT OR IGNORE INTO promo_settings (id, image_url) VALUES (1, '');

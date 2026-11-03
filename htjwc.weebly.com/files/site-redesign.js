@@ -4,6 +4,7 @@
     { href: '293053200421830242152099839006.html', label: '商店分類' },
     { href: 'mall.html', label: '購物商城' },
     { href: '2930532004242152347823560236602796321205.html', label: '專屬活動' },
+    { href: 'promo.html', label: '活動推廣' },
     { href: '229142030925104288582148828771264123000029305320042421523478.html', label: '成為特約店家' },
     { href: 'contact.html', label: 'CONTACT' },
   ];
@@ -31,6 +32,7 @@
     if (href === 'index.html') {
       return current === 'index.html' || current === '';
     }
+    if (href === 'promo.html' && current.indexOf('promo') === 0) return true;
     return current === href || current.indexOf(href.replace('.html', '')) === 0;
   }
 
@@ -451,6 +453,62 @@
       });
   }
 
+  var PROMO_CATS = [
+    { href: 'promo-dining.html', name: '餐飲相關特約店家' },
+    { href: 'promo-cafe.html', name: '咖啡 · 點心 · 甜品類' },
+    { href: 'promo-hotel.html', name: '旅館民宿特約店家' },
+    { href: 'promo-souvenir.html', name: '伴手禮／觀光工廠特約店家' },
+  ];
+
+  function rebuildPromoPage() {
+    var page = fileName();
+    if (page !== 'promo.html' && page !== 'promo') return;
+    if (document.body.getAttribute('data-honda-promo') === '1') return;
+    document.body.setAttribute('data-honda-promo', '1');
+    document.body.classList.add('honda-promo-page');
+
+    var content = document.getElementById('wsite-content');
+    if (!content) return;
+
+    content.innerHTML =
+      '<div class="honda-page-hero">' +
+      '<div class="honda-page-hero-inner">' +
+      '<div class="page-eyebrow">Campaign</div>' +
+      '<h1 class="honda-page-hero-title">活動推廣</h1>' +
+      '<p class="honda-page-hero-sub">Honda Taiwan Joint Welfare Committee</p>' +
+      '</div></div>' +
+      '<div class="promo-photo" id="promo-photo">' +
+      '<div class="promo-photo-empty">頁面照片稍後更新</div>' +
+      '</div>' +
+      '<div class="promo-cats"><div class="cat-grid" id="promo-cat-grid"></div></div>';
+
+    var grid = document.getElementById('promo-cat-grid');
+    PROMO_CATS.forEach(function (c, i) {
+      var a = document.createElement('a');
+      a.className = 'cat-card reveal';
+      a.href = c.href;
+      a.innerHTML =
+        '<span class="idx">0' +
+        (i + 1) +
+        '</span><span class="name">' +
+        c.name +
+        '</span><span class="go">View stores →</span>';
+      grid.appendChild(a);
+    });
+
+    fetch('/api/promo')
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (data) {
+        var url = data && data.image_url;
+        var box = document.getElementById('promo-photo');
+        if (!box || !url) return;
+        box.innerHTML = '<img src="' + escText(url) + '" alt="活動推廣" />';
+      })
+      .catch(function () {});
+  }
+
   function rebuildMallPage() {
     var page = fileName();
     if (page !== 'mall.html' && page.indexOf('mall') !== 0) return;
@@ -473,6 +531,7 @@
     if (document.body.classList.contains('wsite-page-index')) return;
     if (document.body.classList.contains('honda-events-page')) return;
     if (document.body.classList.contains('honda-mall-page')) return;
+    if (document.body.classList.contains('honda-promo-page')) return;
 
     var banner = document.querySelector('.wsite-header-section, .banner-wrap');
     if (banner) banner.classList.add('honda-page-banner');
@@ -524,6 +583,7 @@
     rebuildHome();
     rebuildCategoryHub();
     rebuildEventsPage();
+    rebuildPromoPage();
     rebuildMallPage();
     enhanceInteriorPages();
     observe();

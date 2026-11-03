@@ -237,7 +237,9 @@
       });
       render(el, loaded, activeRegion);
     });
-    fetch('/api/stores?category=' + encodeURIComponent(category))
+    var apiBase = el.getAttribute('data-api') || '/api/stores';
+    if (apiBase !== '/api/promo-stores') apiBase = '/api/stores';
+    fetch(apiBase + '?category=' + encodeURIComponent(category))
       .then(function (r) {
         if (!r.ok) throw new Error('fail');
         return r.json();

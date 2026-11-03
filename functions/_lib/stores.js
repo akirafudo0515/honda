@@ -20,6 +20,7 @@ const FIELDS = [
 ];
 
 const REGIONS = new Set(['all', 'north', 'central', 'south', 'east']);
+export const PROMO_CATEGORIES = new Set(['dining', 'cafe', 'hotel', 'souvenir']);
 
 function parseImages(row) {
   const urls = [];
@@ -125,9 +126,12 @@ export function prepareStoreData(body, { partial = false } = {}) {
   return data;
 }
 
-export async function nextSortOrder(db, category) {
+export async function nextSortOrder(db, category, table = 'stores') {
+  const tableName = table === 'promo_stores' ? 'promo_stores' : 'stores';
   const row = await db
-    .prepare('SELECT COALESCE(MAX(sort_order), -1) AS max_sort FROM stores WHERE category = ?')
+    .prepare(
+      `SELECT COALESCE(MAX(sort_order), -1) AS max_sort FROM ${tableName} WHERE category = ?`
+    )
     .bind(category)
     .first();
   return (row && Number.isFinite(Number(row.max_sort)) ? Number(row.max_sort) : -1) + 1;
