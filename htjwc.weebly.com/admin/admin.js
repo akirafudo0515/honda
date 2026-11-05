@@ -869,31 +869,33 @@
 
   bindEventPreviewInputs();
 
-  function setPromoPreview(id, url, emptyText) {
+  var PROMO_POSTERS = {
+    desktop: '/files/promo-campaign-wide.jpg?v=20261105c',
+    mobile: '/files/promo-campaign-portrait.jpg?v=20261105c',
+  };
+
+  function setPromoPreview(id, url, fallback) {
     var box = document.getElementById(id);
     if (!box) return;
-    if (!url) {
-      box.textContent = emptyText;
-      return;
-    }
-    box.innerHTML = '<img src="' + escapeHtml(url) + '" alt="" />';
+    var src = url || fallback;
+    box.innerHTML = '<img src="' + escapeHtml(src) + '" alt="目前前台照片" />';
   }
 
   async function loadPromo() {
     var data = await api('/api/promo');
     field('promo-title').value = data.title || '活動推廣';
-    setPromoPreview('promo-desktop-preview', data.desktop_image_url, '目前使用預設電腦版海報');
-    setPromoPreview('promo-mobile-preview', data.mobile_image_url, '目前使用預設手機版海報');
+    setPromoPreview('promo-desktop-preview', data.desktop_image_url, PROMO_POSTERS.desktop);
+    setPromoPreview('promo-mobile-preview', data.mobile_image_url, PROMO_POSTERS.mobile);
   }
 
   async function savePromo(patch) {
     var data = await api('/api/promo', { method: 'PUT', json: patch });
     if (patch.title !== undefined) field('promo-title').value = data.title || '活動推廣';
     if (patch.desktop_image_url !== undefined) {
-      setPromoPreview('promo-desktop-preview', data.desktop_image_url, '目前使用預設電腦版海報');
+      setPromoPreview('promo-desktop-preview', data.desktop_image_url, PROMO_POSTERS.desktop);
     }
     if (patch.mobile_image_url !== undefined) {
-      setPromoPreview('promo-mobile-preview', data.mobile_image_url, '目前使用預設手機版海報');
+      setPromoPreview('promo-mobile-preview', data.mobile_image_url, PROMO_POSTERS.mobile);
     }
   }
 
