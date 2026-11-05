@@ -441,17 +441,51 @@
   async function loadCategories() {
     var data = await api('/api/categories?all=1');
     var list = data.categories || [];
+    categoryRecords = list;
     list.forEach(function (c) {
       CATEGORIES[c.slug] = c.name;
     });
     var filterVal = filterCategory.value;
     var formVal = field('f-category').value;
+    var renameVal = field('rename-category').value;
     filterCategory.innerHTML = categoryOptions(list, true);
     field('f-category').innerHTML = categoryOptions(list, false);
+    field('rename-category').innerHTML = categoryOptions(list, false);
     if (filterVal) filterCategory.value = filterVal;
     if (formVal) field('f-category').value = formVal;
+    if (renameVal) field('rename-category').value = renameVal;
+    fillRenameName();
     renderTable();
   }
+
+  var categoryRecords = [];
+
+  function fillRenameName() {
+    var slug = field('rename-category').value;
+    var found = null;
+    categoryRecords.forEach(function (c) {
+      if (c.slug === slug) found = c;
+    });
+    field('rename-category-name').value = found ? found.name : '';
+  }
+
+  document.getElementById('rename-category').addEventListener('change', fillRenameName);
+
+  document.getElementById('rename-category-save').addEventListener('click', async function () {
+    var slug = field('rename-category').value;
+    var name = field('rename-category-name').value.trim();
+    if (!slug || !name) {
+      showStatus('請選擇分類並填名稱', true);
+      return;
+    }
+    try {
+      await api('/api/categories/' + encodeURIComponent(slug), { method: 'PUT', json: { name: name } });
+      await loadCategories();
+      showStatus('已更新分類名稱');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
 
   newBtn.addEventListener('click', function () {
     resetEditor();

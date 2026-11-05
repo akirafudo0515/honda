@@ -1211,9 +1211,13 @@ body.wsite-page-contact a.wsite-button:hover .wsite-button-inner {
   opacity: 0.65;
 }
 
-body.honda-events-page .banner-wrap,
-body.wsite-page-promo .honda-page-hero {
+body.honda-events-page .banner-wrap {
   margin-top: 67px;
+}
+
+body.wsite-page-promo .honda-page-hero,
+body.honda-promo-page .banner-wrap {
+  margin-top: 0;
 }
 
 body.wsite-page-category .banner-wrap {
@@ -1225,7 +1229,7 @@ body.wsite-page-category .banner-wrap {
 body.honda-promo-page .banner-wrap {
   max-width: none;
   width: 100%;
-  margin: 67px 0 0;
+  margin: 0;
 }
 
 a.page-eyebrow {

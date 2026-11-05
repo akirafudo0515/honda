@@ -4,18 +4,17 @@
     { href: '293053200421830242152099839006.html', label: '商店分類' },
     { href: 'mall.html', label: '購物商城' },
     { href: '2930532004242152347823560236602796321205.html', label: '專屬活動' },
-    { href: 'promo.html', label: '活動推廣' },
     { href: '229142030925104288582148828771264123000029305320042421523478.html', label: '成為特約店家' },
     { href: 'contact.html', label: 'CONTACT' },
   ];
 
   var CATS = [
-    { href: '39184391543900629305320042421523478.html', name: '餐飲相關特約店家' },
-    { href: '2165421857-middot-4067024515-middot-299802169739006.html', name: '咖啡 · 點心 · 甜品類' },
-    { href: '260533920827665234873900629305320042183024215.html', name: '旅館民宿特約店家' },
-    { href: '202762516331150352642080924037242883678633674.html', name: '伴手禮／觀光工廠特約店家' },
-    { href: '299832796320241382903900629305320042421523478.html', name: '生活休閒類特約店家' },
-    { href: '29983279632638121209214503609229289.html', name: '生活服務及購物' },
+    { id: 'dining', href: '39184391543900629305320042421523478.html', name: '餐飲相關特約店家' },
+    { id: 'cafe', href: '2165421857-middot-4067024515-middot-299802169739006.html', name: '咖啡 · 點心 · 甜品類' },
+    { id: 'hotel', href: '260533920827665234873900629305320042183024215.html', name: '旅館民宿特約店家' },
+    { id: 'souvenir', href: '202762516331150352642080924037242883678633674.html', name: '伴手禮／觀光工廠特約店家' },
+    { id: 'leisure', href: '299832796320241382903900629305320042421523478.html', name: '生活休閒類特約店家' },
+    { id: 'shopping', href: '29983279632638121209214503609229289.html', name: '生活服務及購物' },
   ];
 
   function ready(fn) {
@@ -53,20 +52,6 @@
     var current = fileName();
     if (current === 'promo' || current === 'promo.html' || current.indexOf('promo-') === 0) {
       document.body.classList.add('honda-promo-locked');
-      var lockedTop = document.createElement('div');
-      lockedTop.className = 'honda-topbar';
-      var lockedHeader = document.createElement('header');
-      lockedHeader.className = 'honda-header';
-      lockedHeader.innerHTML =
-        '<div class="honda-header-inner">' +
-        '<div class="honda-brand">' +
-        '<img class="honda-brand-logo" src="files/htjwc-logo.png?v=20260815e" alt="HTJWC" />' +
-        '<span class="honda-brand-text">' +
-        '<strong>台灣本田聯合福委會</strong>' +
-        '<span>活動推廣</span>' +
-        '</span></div></div>';
-      document.body.insertBefore(lockedTop, document.body.firstChild);
-      document.body.insertBefore(lockedHeader, lockedTop.nextSibling);
       return;
     }
 
@@ -285,6 +270,7 @@
       var a = document.createElement('a');
       a.className = 'cat-card reveal';
       a.href = c.href;
+      a.setAttribute('data-slug', c.id);
       a.innerHTML =
         '<span class="idx">0' +
         (i + 1) +
@@ -309,7 +295,12 @@
         return r.json();
       })
       .then(function (data) {
-        var extras = ((data && data.categories) || []).filter(function (c) {
+        var list = (data && data.categories) || [];
+        list.forEach(function (c) {
+          var nameEl = grid.querySelector('[data-slug="' + c.slug + '"] .name');
+          if (nameEl) nameEl.textContent = c.name;
+        });
+        var extras = list.filter(function (c) {
           return c && c.slug && !known[c.slug];
         });
         extras.forEach(function (c) {
@@ -540,21 +531,21 @@
       '<div class="cat-grid" id="promo-cat-grid"></div></div>';
 
     var grid = document.getElementById('promo-cat-grid');
-    function paintPromoCats(extras) {
+    function paintPromoCats(allCats, extras) {
+      var names = {};
+      (allCats || []).forEach(function (c) {
+        if (c && c.slug) names[c.slug] = c.name;
+      });
       var shown = PROMO_CATS.filter(function (c) {
         return c.always;
       }).map(function (c) {
-        return { href: c.href, name: c.name };
+        return { href: 'promo-view.html?category=' + encodeURIComponent(c.id), name: names[c.id] || c.name };
       });
       var pinned = { dining: 1, cafe: 1, hotel: 1, souvenir: 1 };
       (extras || []).forEach(function (c) {
         if (!c || !c.slug || pinned[c.slug]) return;
-        var known = null;
-        PROMO_CATS.forEach(function (item) {
-          if (item.id === c.slug) known = item;
-        });
         shown.push({
-          href: known ? known.href : 'promo-view.html?category=' + encodeURIComponent(c.slug),
+          href: 'promo-view.html?category=' + encodeURIComponent(c.slug),
           name: c.name,
         });
       });
@@ -567,35 +558,46 @@
         a.innerHTML =
           '<span class="idx">' +
           (n < 10 ? '0' + n : n) +
-          '</span><span class="name">' +
-          c.name +
-          '</span><span class="go">View stores →</span>';
+          '</span><span class="name"></span><span class="go">View stores →</span>';
+        a.querySelector('.name').textContent = c.name;
         grid.appendChild(a);
       });
+      fitPromoShot();
     }
-    paintPromoCats([]);
+    paintPromoCats([], []);
 
-    fetch('/api/categories?promo=1')
+    fetch('/api/categories')
       .then(function (r) {
         return r.json();
       })
-      .then(function (data) {
-        paintPromoCats((data && data.categories) || []);
-        observe();
+      .then(function (allData) {
+        return fetch('/api/categories?promo=1')
+          .then(function (r) {
+            return r.json();
+          })
+          .then(function (promoData) {
+            paintPromoCats(
+              (allData && allData.categories) || [],
+              (promoData && promoData.categories) || []
+            );
+            observe();
+          });
       })
-      .catch(function () {});
+      .catch(function () {
+        fitPromoShot();
+      });
 
-    fetch('/api/promo')
-      .then(function (r) {
-        return r.json();
-      })
-      .then(function (data) {
-        var url = data && data.image_url;
-        var box = document.getElementById('promo-photo');
-        if (!box || !url) return;
-        box.innerHTML = '<img src="' + escText(url) + '" alt="活動推廣" />';
-      })
-      .catch(function () {});
+    fitPromoShot();
+    window.addEventListener('resize', fitPromoShot);
+  }
+
+  function fitPromoShot() {
+    var wide = document.querySelector('.promo-shot-wide');
+    var tall = document.querySelector('.promo-shot-portrait');
+    if (!wide || !tall) return;
+    var narrow = window.matchMedia('(max-width: 900px)').matches;
+    wide.style.setProperty('display', narrow ? 'none' : 'block', 'important');
+    tall.style.setProperty('display', narrow ? 'block' : 'none', 'important');
   }
 
   function rebuildMallPage() {

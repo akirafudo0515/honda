@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" />
-      <link rel="stylesheet" href="admin.css?v=20261105c" />
+      <link rel="stylesheet" href="admin.css?v=20261105d" />
 </head>
 <body>
   <div id="app">
@@ -65,7 +65,16 @@
             <input id="new-category-name" maxlength="40" placeholder="例如：運動休閒" />
           </label>
           <button type="button" id="new-category-save">儲存分類</button>
-          <p class="muted">沒有任何可顯示店家的新分類，不會出現在前台。</p>
+          <label>
+            編輯分類
+            <select id="rename-category"></select>
+          </label>
+          <label>
+            分類名稱
+            <input id="rename-category-name" maxlength="40" />
+          </label>
+          <button type="button" id="rename-category-save">更新名稱</button>
+          <p class="muted">沒有任何可顯示店家的新分類，不會出現在前台。這四個預設分類會出現在活動推廣。</p>
         </div>
 
         <div class="layout">
@@ -327,6 +336,6 @@
       </div>
     </section>
   </div>
-  <script src="admin.js?v=20261105c"></script>
+  <script src="admin.js?v=20261105d"></script>
 </body>
 </html>
