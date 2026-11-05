@@ -388,6 +388,7 @@
         json: { password: document.getElementById('password').value },
       });
       showAdmin();
+      await loadCategories();
       await loadStores();
       showStatus('登入成功');
     } catch (err) {
@@ -404,6 +405,53 @@
   });
 
   filterCategory.addEventListener('change', renderTable);
+
+  document.getElementById('add-category-btn').addEventListener('click', function () {
+    var box = document.getElementById('new-category-box');
+    box.hidden = !box.hidden;
+    if (!box.hidden) field('new-category-name').focus();
+  });
+
+  document.getElementById('new-category-save').addEventListener('click', async function () {
+    var name = field('new-category-name').value.trim();
+    if (!name) {
+      showStatus('請填分類名稱', true);
+      return;
+    }
+    try {
+      await api('/api/categories', { method: 'POST', json: { name: name } });
+      field('new-category-name').value = '';
+      document.getElementById('new-category-box').hidden = true;
+      await loadCategories();
+      showStatus('已新增分類。還沒有可顯示的店家時，前台不會出現');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  function categoryOptions(list, includeAll) {
+    var html = includeAll ? '<option value="">全部</option>' : '';
+    list.forEach(function (c) {
+      html +=
+        '<option value="' + escapeHtml(c.slug) + '">' + escapeHtml(c.name) + '</option>';
+    });
+    return html;
+  }
+
+  async function loadCategories() {
+    var data = await api('/api/categories?all=1');
+    var list = data.categories || [];
+    list.forEach(function (c) {
+      CATEGORIES[c.slug] = c.name;
+    });
+    var filterVal = filterCategory.value;
+    var formVal = field('f-category').value;
+    filterCategory.innerHTML = categoryOptions(list, true);
+    field('f-category').innerHTML = categoryOptions(list, false);
+    if (filterVal) filterCategory.value = filterVal;
+    if (formVal) field('f-category').value = formVal;
+    renderTable();
+  }
 
   newBtn.addEventListener('click', function () {
     resetEditor();
@@ -836,7 +884,7 @@
     .then(function (data) {
       if (data.authenticated) {
         showAdmin();
-        return loadStores();
+        return loadCategories().then(loadStores);
       }
       showLogin();
     })

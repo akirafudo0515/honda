@@ -295,6 +295,37 @@
     });
     host.appendChild(grid);
     document.body.classList.add('honda-cats-ready');
+
+    var known = {
+      dining: 1,
+      cafe: 1,
+      hotel: 1,
+      souvenir: 1,
+      leisure: 1,
+      shopping: 1,
+    };
+    fetch('/api/categories?visible=1')
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (data) {
+        var extras = ((data && data.categories) || []).filter(function (c) {
+          return c && c.slug && !known[c.slug];
+        });
+        extras.forEach(function (c) {
+          var n = grid.querySelectorAll('.cat-card').length + 1;
+          var a = document.createElement('a');
+          a.className = 'cat-card reveal is-in';
+          a.href = 'category.html?category=' + encodeURIComponent(c.slug);
+          a.innerHTML =
+            '<span class="idx">' +
+            (n < 10 ? '0' + n : n) +
+            '</span><span class="name"></span><span class="go">View stores →</span>';
+          a.querySelector('.name').textContent = c.name;
+          grid.appendChild(a);
+        });
+      })
+      .catch(function () {});
   }
 
   function setupEventsHero() {
@@ -500,19 +531,32 @@
       '</div></div>' +
       '<div class="promo-photo" id="promo-photo">' +
       '<a class="promo-photo-link" href="#promo-cats">' +
-      '<picture>' +
-      '<source media="(max-width: 720px)" srcset="files/promo-campaign-portrait.jpg?v=20261105a" />' +
-      '<img src="files/promo-campaign-wide.jpg?v=20261105a" alt="Honda 節能駕趣行，合作店家" />' +
-      '</picture></a>' +
+      '<img class="promo-shot promo-shot-wide" src="files/promo-campaign-wide.jpg?v=20261105c" alt="Honda 節能駕趣行，合作店家" />' +
+      '<img class="promo-shot promo-shot-portrait" src="files/promo-campaign-portrait.jpg?v=20261105c" alt="Honda 節能駕趣行，合作店家" />' +
+      '</a>' +
       '</div>' +
       '<div class="promo-cats" id="promo-cats">' +
       '<h2 class="promo-cats-title">本次活動參與店家</h2>' +
       '<div class="cat-grid" id="promo-cat-grid"></div></div>';
 
     var grid = document.getElementById('promo-cat-grid');
-    function paintPromoCats(activeExtra) {
+    function paintPromoCats(extras) {
       var shown = PROMO_CATS.filter(function (c) {
-        return c.always || activeExtra[c.id];
+        return c.always;
+      }).map(function (c) {
+        return { href: c.href, name: c.name };
+      });
+      var pinned = { dining: 1, cafe: 1, hotel: 1, souvenir: 1 };
+      (extras || []).forEach(function (c) {
+        if (!c || !c.slug || pinned[c.slug]) return;
+        var known = null;
+        PROMO_CATS.forEach(function (item) {
+          if (item.id === c.slug) known = item;
+        });
+        shown.push({
+          href: known ? known.href : 'promo-view.html?category=' + encodeURIComponent(c.slug),
+          name: c.name,
+        });
       });
       grid.innerHTML = '';
       shown.forEach(function (c, i) {
@@ -529,18 +573,14 @@
         grid.appendChild(a);
       });
     }
-    paintPromoCats({});
+    paintPromoCats([]);
 
-    fetch('/api/stores?promo=1')
+    fetch('/api/categories?promo=1')
       .then(function (r) {
         return r.json();
       })
       .then(function (data) {
-        var active = {};
-        ((data && data.stores) || []).forEach(function (store) {
-          if (store.category) active[store.category] = true;
-        });
-        paintPromoCats(active);
+        paintPromoCats((data && data.categories) || []);
         observe();
       })
       .catch(function () {});

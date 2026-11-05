@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/png" sizes="32x32" href="files/favicon-32.png?v=20260815e" />
+  <link rel="apple-touch-icon" href="files/apple-touch-icon.png?v=20260815e" />
+  <title>活動推廣</title>
+  <link rel="stylesheet" type="text/css" href="files/main_style828d.css?1779075500" title="wsite-theme-css" />
+  <link rel="stylesheet" href="files/site-redesign.css?v=20261105c" />
+  <script defer src="files/site-redesign.js?v=20261105c"></script>
+</head>
+<body class="header-page wsite-page-promo-view wsite-theme-light honda-promo-page">
+  <div class="wrapper">
+    <div class="banner-wrap">
+      <div class="honda-page-hero">
+        <div class="honda-page-hero-inner">
+          <a class="page-eyebrow" href="promo.html">活動推廣</a>
+          <h1 class="honda-page-hero-title">活動分類</h1>
+        </div>
+      </div>
+    </div>
+    <div class="content-wrap">
+      <div id="wsite-content" class="wsite-elements wsite-not-footer">
+        <div id="store-list" data-api="/api/stores" data-promo="1"></div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var slug = new URLSearchParams(location.search).get('category') || '';
+      var el = document.getElementById('store-list');
+      if (el && slug) el.setAttribute('data-category', slug);
+      if (!slug) return;
+      fetch('/api/categories')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          var found = ((data && data.categories) || []).filter(function (c) {
+            return c.slug === slug;
+          })[0];
+          if (!found) return;
+          var title = document.querySelector('.honda-page-hero-title');
+          if (title) title.textContent = found.name;
+          document.title = found.name + ' - 活動推廣';
+        })
+        .catch(function () {});
+    })();
+  </script>
+  <script src="files/store-list.js?v=20261105c"></script>
+</body>
+</html>

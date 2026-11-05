@@ -16,6 +16,8 @@
     "migrate:promo:remote": "wrangler d1 execute DB --remote --file=./schema-migrate-promo.sql",
     "migrate:promo-visible:local": "wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./schema-migrate-promo-visible.sql",
     "migrate:promo-visible:remote": "wrangler d1 execute DB --remote --file=./schema-migrate-promo-visible.sql",
+    "migrate:categories:local": "wrangler d1 execute DB --local --persist-to=.wrangler/state --file=./schema-migrate-categories.sql",
+    "migrate:categories:remote": "wrangler d1 execute DB --remote --file=./schema-migrate-categories.sql",
     "extract:events": "node scripts/extract-events.js",
     "extract": "node scripts/extract-stores.js",
     "db:create": "wrangler d1 create honda-stores",

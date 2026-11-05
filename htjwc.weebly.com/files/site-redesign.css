@@ -1216,6 +1216,12 @@ body.wsite-page-promo .honda-page-hero {
   margin-top: 67px;
 }
 
+body.wsite-page-category .banner-wrap {
+  max-width: none;
+  width: 100%;
+  margin: 67px 0 0;
+}
+
 body.honda-promo-page .banner-wrap {
   max-width: none;
   width: 100%;
@@ -1238,6 +1244,24 @@ a.page-eyebrow {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.promo-photo .promo-shot-portrait {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .promo-photo {
+    width: min(100% - 24px, 520px);
+  }
+
+  .promo-photo .promo-shot-wide {
+    display: none !important;
+  }
+
+  .promo-photo .promo-shot-portrait {
+    display: block !important;
+  }
 }
 
 .promo-photo-empty {
