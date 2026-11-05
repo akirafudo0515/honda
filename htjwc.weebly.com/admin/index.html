@@ -28,13 +28,14 @@
       <header class="topbar">
         <div>
           <h1>後台管理</h1>
-          <p class="muted">店家與專屬活動內容維護</p>
+          <p class="muted">店家、活動推廣與專屬活動內容維護</p>
         </div>
         <button type="button" id="logout-btn" class="secondary">登出</button>
       </header>
 
       <nav class="tabs" aria-label="後台分頁">
         <button type="button" class="tab is-active" data-tab="stores">店家管理</button>
+        <button type="button" class="tab" data-tab="promo">活動推廣</button>
         <button type="button" class="tab" data-tab="events">專屬活動</button>
       </nav>
 
@@ -222,6 +223,40 @@
         </div>
       </div>
 
+      <!-- PROMO -->
+      <div id="tab-promo" class="tab-panel" hidden>
+        <div class="card promo-hero-card">
+          <h2>活動名稱</h2>
+          <label>
+            前台顯示名稱
+            <input id="promo-title" maxlength="40" />
+          </label>
+          <button type="button" id="promo-title-save">更新名稱</button>
+        </div>
+
+        <div class="card promo-hero-card">
+          <h2>電腦版照片</h2>
+          <p class="muted">寬螢幕顯示這張。沒有上傳時，使用目前的橫式海報。</p>
+          <label>
+            上傳電腦版照片
+            <input id="promo-desktop-file" type="file" accept="image/*" />
+          </label>
+          <div id="promo-desktop-preview" class="preview">目前使用預設電腦版海報</div>
+          <button type="button" id="promo-desktop-clear" class="secondary">恢復預設</button>
+        </div>
+
+        <div class="card promo-hero-card">
+          <h2>手機版照片</h2>
+          <p class="muted">手機和窄視窗顯示這張。沒有上傳時，使用目前的直式海報。</p>
+          <label>
+            上傳手機版照片
+            <input id="promo-mobile-file" type="file" accept="image/*" />
+          </label>
+          <div id="promo-mobile-preview" class="preview">目前使用預設手機版海報</div>
+          <button type="button" id="promo-mobile-clear" class="secondary">恢復預設</button>
+        </div>
+      </div>
+
       <!-- EVENTS -->
       <div id="tab-events" class="tab-panel" hidden>
         <div class="toolbar card">
@@ -315,6 +350,6 @@
       </div>
     </section>
   </div>
-  <script src="admin.js?v=20261105g"></script>
+  <script src="admin.js?v=20261105h"></script>
 </body>
 </html>

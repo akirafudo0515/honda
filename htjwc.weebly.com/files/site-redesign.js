@@ -591,6 +591,44 @@
     window.addEventListener('resize', fitPromoShot);
   }
 
+  function applyPromoSettings(data) {
+    data = data || {};
+    var title = String(data.title || '活動推廣').trim() || '活動推廣';
+    var page = fileName();
+    if (page === 'promo' || page === 'promo.html') {
+      var hero = document.querySelector('.honda-page-hero-title');
+      if (hero) hero.textContent = title;
+      document.title = title + ' - 台灣本田聯合福委會 特約商店公佈欄';
+    } else if (document.title.indexOf('活動推廣') !== -1) {
+      document.title = document.title.replace('活動推廣', title);
+    }
+    document.querySelectorAll('a.page-eyebrow').forEach(function (a) {
+      if ((a.getAttribute('href') || '').indexOf('promo') === 0) a.textContent = title;
+    });
+    var wide = document.querySelector('.promo-shot-wide');
+    var tall = document.querySelector('.promo-shot-portrait');
+    if (wide && data.desktop_image_url) {
+      wide.src = data.desktop_image_url;
+      wide.alt = title;
+    }
+    if (tall && data.mobile_image_url) {
+      tall.src = data.mobile_image_url;
+      tall.alt = title;
+    }
+    fitPromoShot();
+  }
+
+  function loadPromoPageSettings() {
+    var page = fileName();
+    if (page !== 'promo' && page !== 'promo.html' && page.indexOf('promo-') !== 0) return;
+    fetch('/api/promo')
+      .then(function (r) {
+        return r.json();
+      })
+      .then(applyPromoSettings)
+      .catch(function () {});
+  }
+
   function fitPromoShot() {
     var wide = document.querySelector('.promo-shot-wide');
     var tall = document.querySelector('.promo-shot-portrait');
@@ -677,6 +715,7 @@
     rebuildPromoPage();
     rebuildMallPage();
     enhanceInteriorPages();
+    loadPromoPageSettings();
     observe();
     setTimeout(observe, 700);
     setTimeout(observe, 1800);

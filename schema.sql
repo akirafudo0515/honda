@@ -71,6 +71,9 @@ CREATE INDEX IF NOT EXISTS idx_promo_stores_visible ON promo_stores(visible);
 CREATE TABLE IF NOT EXISTS promo_settings (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   image_url TEXT DEFAULT '',
+  desktop_image_url TEXT DEFAULT '',
+  mobile_image_url TEXT DEFAULT '',
+  title TEXT DEFAULT '活動推廣',
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 

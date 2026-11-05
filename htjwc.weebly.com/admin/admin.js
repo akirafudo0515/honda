@@ -769,11 +769,20 @@
       btn.classList.toggle('is-active', btn.getAttribute('data-tab') === name);
     });
     document.getElementById('tab-stores').hidden = name !== 'stores';
+    document.getElementById('tab-promo').hidden = name !== 'promo';
     document.getElementById('tab-events').hidden = name !== 'events';
     if (name === 'stores') {
       editor.hidden = true;
       resetEventEditor();
       if (eventEditor) eventEditor.hidden = true;
+    }
+    if (name === 'promo') {
+      editor.hidden = true;
+      resetEventEditor();
+      if (eventEditor) eventEditor.hidden = true;
+      loadPromo().catch(function (err) {
+        showStatus(err.message || '活動推廣載入失敗', true);
+      });
     }
     if (name === 'events') {
       editor.hidden = true;
@@ -859,6 +868,89 @@
   });
 
   bindEventPreviewInputs();
+
+  function setPromoPreview(id, url, emptyText) {
+    var box = document.getElementById(id);
+    if (!box) return;
+    if (!url) {
+      box.textContent = emptyText;
+      return;
+    }
+    box.innerHTML = '<img src="' + escapeHtml(url) + '" alt="" />';
+  }
+
+  async function loadPromo() {
+    var data = await api('/api/promo');
+    field('promo-title').value = data.title || '活動推廣';
+    setPromoPreview('promo-desktop-preview', data.desktop_image_url, '目前使用預設電腦版海報');
+    setPromoPreview('promo-mobile-preview', data.mobile_image_url, '目前使用預設手機版海報');
+  }
+
+  async function savePromo(patch) {
+    var data = await api('/api/promo', { method: 'PUT', json: patch });
+    if (patch.title !== undefined) field('promo-title').value = data.title || '活動推廣';
+    if (patch.desktop_image_url !== undefined) {
+      setPromoPreview('promo-desktop-preview', data.desktop_image_url, '目前使用預設電腦版海報');
+    }
+    if (patch.mobile_image_url !== undefined) {
+      setPromoPreview('promo-mobile-preview', data.mobile_image_url, '目前使用預設手機版海報');
+    }
+  }
+
+  document.getElementById('promo-title-save').addEventListener('click', async function () {
+    try {
+      await savePromo({ title: field('promo-title').value.trim() });
+      showStatus('已更新活動名稱');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  async function uploadPromoImage(inputId, fieldName) {
+    var file = field(inputId).files && field(inputId).files[0];
+    if (!file) return;
+    var data = await uploadOne(file);
+    var patch = {};
+    patch[fieldName] = data.url;
+    await savePromo(patch);
+    field(inputId).value = '';
+  }
+
+  field('promo-desktop-file').addEventListener('change', async function () {
+    try {
+      await uploadPromoImage('promo-desktop-file', 'desktop_image_url');
+      showStatus('電腦版照片已更新');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  field('promo-mobile-file').addEventListener('change', async function () {
+    try {
+      await uploadPromoImage('promo-mobile-file', 'mobile_image_url');
+      showStatus('手機版照片已更新');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  document.getElementById('promo-desktop-clear').addEventListener('click', async function () {
+    try {
+      await savePromo({ desktop_image_url: '' });
+      showStatus('已恢復電腦版海報');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
+
+  document.getElementById('promo-mobile-clear').addEventListener('click', async function () {
+    try {
+      await savePromo({ mobile_image_url: '' });
+      showStatus('已恢復手機版海報');
+    } catch (err) {
+      showStatus(err.message, true);
+    }
+  });
 
   // boot
   api('/api/login')
