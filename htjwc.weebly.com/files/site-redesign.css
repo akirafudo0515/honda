@@ -1232,6 +1232,8 @@ a.page-eyebrow {
   margin: 28px auto 0;
 }
 
+.promo-photo a,
+.promo-photo picture,
 .promo-photo img {
   display: block;
   width: 100%;

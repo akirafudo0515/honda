@@ -478,9 +478,13 @@
       '<p class="honda-page-hero-sub">Honda Taiwan Joint Welfare Committee</p>' +
       '</div></div>' +
       '<div class="promo-photo" id="promo-photo">' +
-      '<div class="promo-photo-empty">頁面照片稍後更新</div>' +
+      '<a class="promo-photo-link" href="#promo-cats">' +
+      '<picture>' +
+      '<source media="(max-width: 720px)" srcset="files/promo-campaign-portrait.jpg?v=20261105a" />' +
+      '<img src="files/promo-campaign-wide.jpg?v=20261105a" alt="Honda 節能駕趣行，合作店家" />' +
+      '</picture></a>' +
       '</div>' +
-      '<div class="promo-cats">' +
+      '<div class="promo-cats" id="promo-cats">' +
       '<h2 class="promo-cats-title">本次活動參與店家</h2>' +
       '<div class="cat-grid" id="promo-cat-grid"></div></div>';
 
