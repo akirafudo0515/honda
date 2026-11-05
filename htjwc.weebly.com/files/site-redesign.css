@@ -1216,8 +1216,11 @@ body.honda-events-page .banner-wrap {
 }
 
 body.wsite-page-promo .honda-page-hero,
-body.honda-promo-page .banner-wrap {
-  margin-top: 0;
+body.honda-promo-page .banner-wrap,
+body.honda-promo-locked .content-wrap,
+body.honda-promo-page .content-wrap,
+body.wsite-page-promo .content-wrap {
+  margin-top: 0 !important;
 }
 
 body.wsite-page-category .banner-wrap {
