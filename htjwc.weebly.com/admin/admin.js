@@ -764,25 +764,14 @@
       btn.classList.toggle('is-active', btn.getAttribute('data-tab') === name);
     });
     document.getElementById('tab-stores').hidden = name !== 'stores';
-    document.getElementById('tab-promo').hidden = name !== 'promo';
     document.getElementById('tab-events').hidden = name !== 'events';
     if (name === 'stores') {
       editor.hidden = true;
       resetEventEditor();
       if (eventEditor) eventEditor.hidden = true;
-      if (promoEditor) promoEditor.hidden = true;
-    }
-    if (name === 'promo') {
-      editor.hidden = true;
-      resetEventEditor();
-      if (eventEditor) eventEditor.hidden = true;
-      loadPromo().catch(function (err) {
-        showStatus(err.message || '活動推廣載入失敗', true);
-      });
     }
     if (name === 'events') {
       editor.hidden = true;
-      if (promoEditor) promoEditor.hidden = true;
       bindEventPreviewInputs();
       loadEvents().catch(function (err) {
         showStatus(err.message || '活動載入失敗', true);
@@ -865,53 +854,6 @@
   });
 
   bindEventPreviewInputs();
-
-  // ===== Promo page photo =====
-  var promoEditor = null;
-  var promoHeroUrl = '';
-
-  function setPromoHeroPreview(url) {
-    promoHeroUrl = url || '';
-    var box = document.getElementById('promo-hero-preview');
-    if (!box) return;
-    if (!promoHeroUrl) {
-      box.innerHTML = '目前使用活動海報。上傳新照片會取代海報。';
-      return;
-    }
-    box.innerHTML = '<img src="' + escapeHtml(promoHeroUrl) + '" alt="" />';
-  }
-
-  async function loadPromo() {
-    var hero = await api('/api/promo');
-    setPromoHeroPreview(hero.image_url || '');
-  }
-
-  async function savePromoHero(url) {
-    var data = await api('/api/promo', { method: 'PUT', json: { image_url: url || '' } });
-    setPromoHeroPreview(data.image_url || '');
-  }
-
-  field('promo-hero-file').addEventListener('change', async function () {
-    try {
-      var file = field('promo-hero-file').files && field('promo-hero-file').files[0];
-      if (!file) return;
-      var data = await uploadOne(file);
-      await savePromoHero(data.url);
-      field('promo-hero-file').value = '';
-      showStatus('頁面照片已更新');
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  });
-
-  document.getElementById('promo-hero-clear').addEventListener('click', async function () {
-    try {
-      await savePromoHero('');
-      showStatus('已恢復活動海報');
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  });
 
   // boot
   api('/api/login')

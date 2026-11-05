@@ -28,14 +28,13 @@
       <header class="topbar">
         <div>
           <h1>後台管理</h1>
-          <p class="muted">店家、活動推廣與專屬活動內容維護</p>
+          <p class="muted">店家與專屬活動內容維護</p>
         </div>
         <button type="button" id="logout-btn" class="secondary">登出</button>
       </header>
 
       <nav class="tabs" aria-label="後台分頁">
         <button type="button" class="tab is-active" data-tab="stores">店家管理</button>
-        <button type="button" class="tab" data-tab="promo">活動推廣</button>
         <button type="button" class="tab" data-tab="events">專屬活動</button>
       </nav>
 
@@ -224,26 +223,7 @@
         </div>
       </div>
 
-      <!-- PROMO -->
-      <div id="tab-promo" class="tab-panel" hidden>
-        <div class="card promo-hero-card">
-          <h2>頁面照片</h2>
-          <p class="muted">顯示在前台「活動推廣」最上方。照片可以稍後再換。</p>
-          <label>
-            上傳照片
-            <input id="promo-hero-file" type="file" accept="image/*" />
-          </label>
-          <div id="promo-hero-preview" class="preview">尚未上傳照片</div>
-          <button type="button" id="promo-hero-clear" class="secondary">移除照片</button>
-        </div>
-
-        <div class="card promo-hero-card">
-          <h2>活動推廣顯示</h2>
-          <p class="muted">要讓哪一家店出現在活動推廣，請到「店家管理」打開「活動推廣顯示」。這裡只換頁面照片。六個商店分類都可以打開，有店家被打開的分類會出現在活動頁。</p>
-        </div>
-      </div>
-
-<!-- EVENTS -->
+      <!-- EVENTS -->
       <div id="tab-events" class="tab-panel" hidden>
         <div class="toolbar card">
           <p class="muted" style="margin:0">管理前台「專屬活動」頁面內容。目前資料庫若尚無活動，請按「新增活動」或儲存下方表單。</p>
@@ -336,6 +316,6 @@
       </div>
     </section>
   </div>
-  <script src="admin.js?v=20261105d"></script>
+  <script src="admin.js?v=20261105f"></script>
 </body>
 </html>
