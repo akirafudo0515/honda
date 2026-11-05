@@ -408,8 +408,11 @@
 
   document.getElementById('add-category-btn').addEventListener('click', function () {
     var box = document.getElementById('new-category-box');
-    box.hidden = !box.hidden;
-    if (!box.hidden) field('new-category-name').focus();
+    var open = box.hidden;
+    box.hidden = !open;
+    this.setAttribute('aria-expanded', open ? 'true' : 'false');
+    this.classList.toggle('is-active', open);
+    if (open) field('new-category-name').focus();
   });
 
   document.getElementById('new-category-save').addEventListener('click', async function () {
@@ -422,6 +425,8 @@
       await api('/api/categories', { method: 'POST', json: { name: name } });
       field('new-category-name').value = '';
       document.getElementById('new-category-box').hidden = true;
+      document.getElementById('add-category-btn').setAttribute('aria-expanded', 'false');
+      document.getElementById('add-category-btn').classList.remove('is-active');
       await loadCategories();
       showStatus('已新增分類。還沒有可顯示的店家時，前台不會出現');
     } catch (err) {

@@ -82,6 +82,11 @@ button.secondary {
 
 button.secondary:hover { background: #d1d5db; }
 
+button.secondary.is-active {
+  background: var(--brand);
+  color: #fff;
+}
+
 button.danger {
   background: var(--danger);
 }
