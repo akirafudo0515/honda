@@ -170,7 +170,7 @@ th, td {
 th { color: var(--muted); font-weight: 600; white-space: nowrap; }
 
 #store-table,
-#promo-table { min-width: 760px; }
+#promo-table { min-width: 920px; }
 
 .promo-hero-card { margin-bottom: 16px; }
 .promo-hero-card h2 { margin: 0 0 8px; font-size: 18px; }

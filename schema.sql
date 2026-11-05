@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS stores (
   pdf_name TEXT DEFAULT '',
   sort_order INTEGER NOT NULL DEFAULT 0,
   visible INTEGER NOT NULL DEFAULT 1,
+  promo_visible INTEGER NOT NULL DEFAULT 0,
   region TEXT NOT NULL DEFAULT 'all',
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))

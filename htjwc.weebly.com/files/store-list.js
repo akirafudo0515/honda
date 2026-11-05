@@ -239,7 +239,9 @@
     });
     var apiBase = el.getAttribute('data-api') || '/api/stores';
     if (apiBase !== '/api/promo-stores') apiBase = '/api/stores';
-    fetch(apiBase + '?category=' + encodeURIComponent(category))
+    var listUrl = apiBase + '?category=' + encodeURIComponent(category);
+    if (el.getAttribute('data-promo') === '1') listUrl += '&promo=1';
+    fetch(listUrl)
       .then(function (r) {
         if (!r.ok) throw new Error('fail');
         return r.json();

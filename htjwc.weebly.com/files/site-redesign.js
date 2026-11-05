@@ -51,6 +51,25 @@
     if (document.querySelector('.honda-header')) return;
 
     var current = fileName();
+    if (current === 'promo' || current === 'promo.html' || current.indexOf('promo-') === 0) {
+      document.body.classList.add('honda-promo-locked');
+      var lockedTop = document.createElement('div');
+      lockedTop.className = 'honda-topbar';
+      var lockedHeader = document.createElement('header');
+      lockedHeader.className = 'honda-header';
+      lockedHeader.innerHTML =
+        '<div class="honda-header-inner">' +
+        '<div class="honda-brand">' +
+        '<img class="honda-brand-logo" src="files/htjwc-logo.png?v=20260815e" alt="HTJWC" />' +
+        '<span class="honda-brand-text">' +
+        '<strong>台灣本田聯合福委會</strong>' +
+        '<span>活動推廣</span>' +
+        '</span></div></div>';
+      document.body.insertBefore(lockedTop, document.body.firstChild);
+      document.body.insertBefore(lockedHeader, lockedTop.nextSibling);
+      return;
+    }
+
     var top = document.createElement('div');
     top.className = 'honda-topbar';
 
@@ -454,10 +473,12 @@
   }
 
   var PROMO_CATS = [
-    { href: 'promo-dining.html', name: '餐飲相關特約店家' },
-    { href: 'promo-cafe.html', name: '咖啡 · 點心 · 甜品類' },
-    { href: 'promo-hotel.html', name: '旅館民宿特約店家' },
-    { href: 'promo-souvenir.html', name: '伴手禮／觀光工廠特約店家' },
+    { id: 'dining', href: 'promo-dining.html', name: '餐飲相關特約店家', always: true },
+    { id: 'cafe', href: 'promo-cafe.html', name: '咖啡 · 點心 · 甜品類', always: true },
+    { id: 'hotel', href: 'promo-hotel.html', name: '旅館民宿特約店家', always: true },
+    { id: 'souvenir', href: 'promo-souvenir.html', name: '伴手禮／觀光工廠特約店家', always: true },
+    { id: 'leisure', href: 'promo-leisure.html', name: '生活休閒類特約店家', always: false },
+    { id: 'shopping', href: 'promo-shopping.html', name: '生活服務及購物', always: false },
   ];
 
   function rebuildPromoPage() {
@@ -489,18 +510,40 @@
       '<div class="cat-grid" id="promo-cat-grid"></div></div>';
 
     var grid = document.getElementById('promo-cat-grid');
-    PROMO_CATS.forEach(function (c, i) {
-      var a = document.createElement('a');
-      a.className = 'cat-card reveal';
-      a.href = c.href;
-      a.innerHTML =
-        '<span class="idx">0' +
-        (i + 1) +
-        '</span><span class="name">' +
-        c.name +
-        '</span><span class="go">View stores →</span>';
-      grid.appendChild(a);
-    });
+    function paintPromoCats(activeExtra) {
+      var shown = PROMO_CATS.filter(function (c) {
+        return c.always || activeExtra[c.id];
+      });
+      grid.innerHTML = '';
+      shown.forEach(function (c, i) {
+        var n = i + 1;
+        var a = document.createElement('a');
+        a.className = 'cat-card reveal';
+        a.href = c.href;
+        a.innerHTML =
+          '<span class="idx">' +
+          (n < 10 ? '0' + n : n) +
+          '</span><span class="name">' +
+          c.name +
+          '</span><span class="go">View stores →</span>';
+        grid.appendChild(a);
+      });
+    }
+    paintPromoCats({});
+
+    fetch('/api/stores?promo=1')
+      .then(function (r) {
+        return r.json();
+      })
+      .then(function (data) {
+        var active = {};
+        ((data && data.stores) || []).forEach(function (store) {
+          if (store.category) active[store.category] = true;
+        });
+        paintPromoCats(active);
+        observe();
+      })
+      .catch(function () {});
 
     fetch('/api/promo')
       .then(function (r) {

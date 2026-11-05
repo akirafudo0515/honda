@@ -8,6 +8,7 @@ export async function onRequestGet(context) {
   const url = new URL(request.url);
   const category = url.searchParams.get('category');
   const all = url.searchParams.get('all') === '1';
+  const promo = url.searchParams.get('promo') === '1';
 
   if (all) {
     const denied = await requireAuth(request, env);
@@ -21,7 +22,8 @@ export async function onRequestGet(context) {
     where.push('category = ?');
     binds.push(category);
   }
-  if (!all) where.push('visible = 1');
+  if (!all && !promo) where.push('visible = 1');
+  if (promo) where.push('promo_visible = 1');
   if (where.length) sql += ' WHERE ' + where.join(' AND ');
   sql += ' ORDER BY sort_order ASC, id ASC';
 

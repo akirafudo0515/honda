@@ -16,6 +16,7 @@ const FIELDS = [
   'pdf_name',
   'sort_order',
   'visible',
+  'promo_visible',
   'region',
 ];
 
@@ -77,6 +78,7 @@ export function rowToStore(row) {
   return {
     ...row,
     visible: !!row.visible,
+    promo_visible: !!(row && row.promo_visible),
     region: REGIONS.has(row.region) ? row.region : 'all',
     images,
     image_url: images[0] || '',
@@ -103,7 +105,11 @@ export function prepareStoreData(body, { partial = false } = {}) {
   }
 
   if (data.visible !== undefined) {
-    data.visible = data.visible === false || data.visible === 0 ? 0 : 1;
+    data.visible = data.visible === false || data.visible === 0 || data.visible === '0' ? 0 : 1;
+  }
+  if (data.promo_visible !== undefined) {
+    data.promo_visible =
+      data.promo_visible === false || data.promo_visible === 0 || data.promo_visible === '0' ? 0 : 1;
   }
   if (Object.prototype.hasOwnProperty.call(data, 'sort_order')) {
     const raw = data.sort_order;

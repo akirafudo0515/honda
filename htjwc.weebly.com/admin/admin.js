@@ -137,6 +137,7 @@
     field('f-website').value = '';
     field('f-sort').value = '';
     field('f-visible').value = '1';
+    field('f-promo-visible').value = '0';
     setImages([]);
     field('f-pdf-url').value = '';
     field('f-pdf-name').value = '';
@@ -164,6 +165,7 @@
     field('f-website').value = store.website || '';
     field('f-sort').value = store.sort_order != null ? store.sort_order : '';
     field('f-visible').value = store.visible ? '1' : '0';
+    field('f-promo-visible').value = store.promo_visible ? '1' : '0';
     setImages(
       Array.isArray(store.images) && store.images.length
         ? store.images
@@ -200,6 +202,7 @@
       pdf_url: field('f-pdf-url').value.trim(),
       pdf_name: field('f-pdf-name').value.trim(),
       visible: field('f-visible').value === '1' ? 1 : 0,
+      promo_visible: field('f-promo-visible').value === '1' ? 1 : 0,
     };
     if (sortRaw !== '' && sortRaw != null) {
       payload.sort_order = Number(sortRaw);
@@ -215,7 +218,7 @@
     tbody.innerHTML = '';
     if (!list.length) {
       tbody.innerHTML =
-        '<tr><td colspan="6" style="color:#6b7280;padding:20px;">尚無店家</td></tr>';
+        '<tr><td colspan="7" style="color:#6b7280;padding:20px;">尚無店家</td></tr>';
       return;
     }
     list.forEach(function (s) {
@@ -236,9 +239,15 @@
         s.id +
         '">' +
         (s.visible ? '顯示' : '不顯示') +
+        '</button></td><td><button type="button" class="badge ' +
+        (s.promo_visible ? 'on' : 'off') +
+        '" data-promo-toggle="' +
+        s.id +
+        '">' +
+        (s.promo_visible ? '顯示' : '不顯示') +
         '</button></td><td>編輯</td>';
       tr.addEventListener('click', function (e) {
-        if (e.target && e.target.getAttribute('data-visible-toggle') === 'store') return;
+        if (e.target && e.target.closest('[data-visible-toggle], [data-promo-toggle]')) return;
         fillEditor(s);
         renderTable();
       });
@@ -247,6 +256,13 @@
         badge.addEventListener('click', function (e) {
           e.stopPropagation();
           toggleStoreVisible(s.id);
+        });
+      }
+      var promoBadge = tr.querySelector('[data-promo-toggle]');
+      if (promoBadge) {
+        promoBadge.addEventListener('click', function (e) {
+          e.stopPropagation();
+          togglePromoVisible(s.id);
         });
       }
       tbody.appendChild(tr);
@@ -265,6 +281,30 @@
     var data = await api('/api/stores?all=1');
     stores = data.stores || [];
     renderTable();
+  }
+
+  async function togglePromoVisible(id) {
+    var store = stores.find(function (s) {
+      return s.id === id;
+    });
+    if (!store) return;
+    var nextVisible = store.promo_visible ? 0 : 1;
+    try {
+      await api('/api/stores/' + id, {
+        method: 'PUT',
+        json: { promo_visible: nextVisible },
+      });
+      showStatus(nextVisible ? '已顯示於活動推廣' : '已從活動推廣隱藏');
+      await loadStores();
+      if (editingId === id) {
+        var updated = stores.find(function (s) {
+          return s.id === id;
+        });
+        if (updated) fillEditor(updated);
+      }
+    } catch (err) {
+      showStatus(err.message, true);
+    }
   }
 
   async function toggleStoreVisible(id) {
@@ -744,293 +784,30 @@
 
   bindEventPreviewInputs();
 
-  // ===== Promo (separate from store categories) =====
-  var PROMO_CATEGORIES = {
-    dining: '餐飲相關特約店家',
-    cafe: '咖啡 · 點心 · 甜品類',
-    hotel: '旅館民宿特約店家',
-    souvenir: '伴手禮/觀光工廠特約店家',
-  };
-  var promoStores = [];
-  var promoEditingId = null;
-  var promoLoaded = false;
-  var promoEditor = document.getElementById('promo-editor');
-  var promoEditorTitle = document.getElementById('promo-editor-title');
-  var promoTbody = document.getElementById('promo-tbody');
-  var promoFilter = document.getElementById('promo-filter-category');
+  // ===== Promo page photo =====
+  var promoEditor = null;
   var promoHeroUrl = '';
-
-  function promoImages() {
-    try {
-      var parsed = JSON.parse(field('p-image-urls').value || '[]');
-      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
-    } catch (e) {
-      return [];
-    }
-  }
-
-  function setPromoImages(urls) {
-    var list = (urls || []).filter(Boolean).slice(0, 12);
-    field('p-image-urls').value = JSON.stringify(list);
-    var box = document.getElementById('promo-image-preview');
-    if (!list.length) {
-      box.innerHTML = '<span class="empty">尚未上傳圖片</span>';
-      return;
-    }
-    box.innerHTML = list
-      .map(function (url, idx) {
-        return (
-          '<div class="image-thumb"><img src="' +
-          escapeHtml(url) +
-          '" alt="" /><button type="button" data-promo-remove="' +
-          idx +
-          '">刪除</button></div>'
-        );
-      })
-      .join('');
-  }
-
-  function setPromoPdf(url, name) {
-    var box = document.getElementById('promo-pdf-preview');
-    if (!url) {
-      box.innerHTML = '尚未上傳 PDF';
-      return;
-    }
-    box.innerHTML =
-      '<a href="' + escapeHtml(url) + '" target="_blank">' + escapeHtml(name || '下載 PDF') + '</a>';
-  }
 
   function setPromoHeroPreview(url) {
     promoHeroUrl = url || '';
     var box = document.getElementById('promo-hero-preview');
+    if (!box) return;
     if (!promoHeroUrl) {
-      box.innerHTML = '尚未上傳照片';
+      box.innerHTML = '目前使用活動海報。上傳新照片會取代海報。';
       return;
     }
     box.innerHTML = '<img src="' + escapeHtml(promoHeroUrl) + '" alt="" />';
   }
 
-  function resetPromoEditor() {
-    promoEditingId = null;
-    field('p-category').value = promoFilter.value || 'dining';
-    field('p-region').value = 'all';
-    field('p-name').value = '';
-    field('p-address').value = '';
-    field('p-phone').value = '';
-    field('p-hours').value = '';
-    field('p-transport').value = '';
-    field('p-services').value = '';
-    field('p-description').value = '';
-    field('p-discount').value = '';
-    field('p-notes').value = '';
-    field('p-website').value = '';
-    field('p-sort').value = '';
-    field('p-visible').value = '1';
-    field('p-pdf-url').value = '';
-    field('p-pdf-name').value = '';
-    field('p-image-file').value = '';
-    field('p-pdf-file').value = '';
-    setPromoImages([]);
-    setPromoPdf('');
-    promoEditorTitle.textContent = '新增店家';
-    document.getElementById('promo-delete-btn').hidden = true;
-  }
-
-  function fillPromoEditor(store) {
-    promoEditingId = store.id;
-    field('p-category').value = PROMO_CATEGORIES[store.category] ? store.category : 'dining';
-    field('p-region').value = REGIONS[store.region] ? store.region : 'all';
-    field('p-name').value = store.name || '';
-    field('p-address').value = store.address || '';
-    field('p-phone').value = store.phone || '';
-    field('p-hours').value = store.hours || '';
-    field('p-transport').value = store.transport || '';
-    field('p-services').value = store.services || '';
-    field('p-description').value = store.description || '';
-    field('p-discount').value = store.discount || '';
-    field('p-notes').value = store.notes || '';
-    field('p-website').value = store.website || '';
-    field('p-sort').value = store.sort_order != null ? store.sort_order : '';
-    field('p-visible').value = store.visible ? '1' : '0';
-    setPromoImages(
-      Array.isArray(store.images) && store.images.length
-        ? store.images
-        : store.image_url
-          ? [store.image_url]
-          : []
-    );
-    field('p-pdf-url').value = store.pdf_url || '';
-    field('p-pdf-name').value = store.pdf_name || '';
-    setPromoPdf(store.pdf_url || '', store.pdf_name || '');
-    promoEditorTitle.textContent = '編輯店家';
-    document.getElementById('promo-delete-btn').hidden = false;
-    promoEditor.hidden = false;
-  }
-
-  function collectPromoPayload() {
-    var images = promoImages();
-    var sortRaw = field('p-sort').value;
-    var payload = {
-      category: field('p-category').value,
-      region: field('p-region').value || 'all',
-      name: field('p-name').value.trim(),
-      address: field('p-address').value.trim(),
-      phone: field('p-phone').value.trim(),
-      hours: field('p-hours').value.trim(),
-      transport: field('p-transport').value.trim(),
-      services: field('p-services').value.trim(),
-      description: field('p-description').value.trim(),
-      discount: field('p-discount').value.trim(),
-      notes: field('p-notes').value.trim(),
-      website: field('p-website').value.trim(),
-      images: images,
-      image_url: images[0] || '',
-      pdf_url: field('p-pdf-url').value.trim(),
-      pdf_name: field('p-pdf-name').value.trim(),
-      visible: field('p-visible').value === '1' ? 1 : 0,
-    };
-    if (sortRaw !== '' && sortRaw != null) payload.sort_order = Number(sortRaw);
-    return payload;
-  }
-
-  function renderPromoTable() {
-    var cat = promoFilter.value;
-    var list = promoStores.filter(function (s) {
-      return !cat || s.category === cat;
-    });
-    promoTbody.innerHTML = '';
-    if (!list.length) {
-      promoTbody.innerHTML =
-        '<tr><td colspan="6" style="color:#6b7280;padding:20px;">這個分類還沒有店家</td></tr>';
-      return;
-    }
-    list.forEach(function (s) {
-      var tr = document.createElement('tr');
-      if (promoEditingId === s.id) tr.className = 'active';
-      tr.innerHTML =
-        '<td>' +
-        s.sort_order +
-        '</td><td>' +
-        escapeHtml(s.name) +
-        '</td><td>' +
-        escapeHtml(PROMO_CATEGORIES[s.category] || s.category) +
-        '</td><td>' +
-        escapeHtml(REGIONS[s.region] || '全部') +
-        '</td><td><button type="button" class="badge ' +
-        (s.visible ? 'on' : 'off') +
-        '" data-promo-visible="' +
-        s.id +
-        '">' +
-        (s.visible ? '顯示' : '不顯示') +
-        '</button></td><td>編輯</td>';
-      tr.addEventListener('click', function (e) {
-        if (e.target && e.target.getAttribute('data-promo-visible')) return;
-        fillPromoEditor(s);
-        renderPromoTable();
-      });
-      var badge = tr.querySelector('[data-promo-visible]');
-      if (badge) {
-        badge.addEventListener('click', function (e) {
-          e.stopPropagation();
-          togglePromoVisible(s.id);
-        });
-      }
-      promoTbody.appendChild(tr);
-    });
-  }
-
   async function loadPromo() {
     var hero = await api('/api/promo');
     setPromoHeroPreview(hero.image_url || '');
-    var data = await api('/api/promo-stores?all=1');
-    promoStores = data.stores || [];
-    promoLoaded = true;
-    renderPromoTable();
   }
 
   async function savePromoHero(url) {
     var data = await api('/api/promo', { method: 'PUT', json: { image_url: url || '' } });
     setPromoHeroPreview(data.image_url || '');
   }
-
-  async function togglePromoVisible(id) {
-    var store = promoStores.find(function (s) {
-      return s.id === id;
-    });
-    if (!store) return;
-    var nextVisible = store.visible ? 0 : 1;
-    try {
-      await api('/api/promo-stores/' + id, { method: 'PUT', json: { visible: nextVisible } });
-      showStatus(nextVisible ? '已設為顯示' : '已設為不顯示');
-      await loadPromo();
-      if (promoEditingId === id) {
-        var updated = promoStores.find(function (s) {
-          return s.id === id;
-        });
-        if (updated) fillPromoEditor(updated);
-      }
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  }
-
-  document.getElementById('promo-new-btn').addEventListener('click', function () {
-    resetPromoEditor();
-    promoEditor.hidden = false;
-    renderPromoTable();
-  });
-
-  promoFilter.addEventListener('change', renderPromoTable);
-
-  document.getElementById('promo-cancel-btn').addEventListener('click', function () {
-    promoEditor.hidden = true;
-    resetPromoEditor();
-    renderPromoTable();
-  });
-
-  document.getElementById('promo-image-preview').addEventListener('click', function (e) {
-    var btn = e.target.closest('[data-promo-remove]');
-    if (!btn) return;
-    var list = promoImages();
-    list.splice(Number(btn.getAttribute('data-promo-remove')), 1);
-    setPromoImages(list);
-  });
-
-  field('p-image-file').addEventListener('change', async function () {
-    try {
-      var files = field('p-image-file').files
-        ? Array.prototype.slice.call(field('p-image-file').files)
-        : [];
-      if (!files.length) return;
-      var current = promoImages();
-      var remain = 12 - current.length;
-      if (remain <= 0) throw new Error('最多只能上傳 12 張圖片');
-      files = files.slice(0, remain);
-      for (var i = 0; i < files.length; i++) {
-        var uploaded = await uploadOne(files[i]);
-        current.push(uploaded.url);
-      }
-      setPromoImages(current);
-      field('p-image-file').value = '';
-      showStatus('圖片已上傳');
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  });
-
-  field('p-pdf-file').addEventListener('change', async function () {
-    try {
-      var file = field('p-pdf-file').files && field('p-pdf-file').files[0];
-      if (!file) return;
-      var data = await uploadOne(file);
-      field('p-pdf-url').value = data.url;
-      field('p-pdf-name').value = data.name || file.name;
-      setPromoPdf(data.url, data.name || file.name);
-      showStatus('PDF 已上傳');
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  });
 
   field('promo-hero-file').addEventListener('change', async function () {
     try {
@@ -1048,44 +825,7 @@
   document.getElementById('promo-hero-clear').addEventListener('click', async function () {
     try {
       await savePromoHero('');
-      showStatus('已移除頁面照片');
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  });
-
-  promoEditor.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    var payload = collectPromoPayload();
-    if (!payload.name) {
-      showStatus('請填寫店名', true);
-      return;
-    }
-    try {
-      if (promoEditingId) {
-        await api('/api/promo-stores/' + promoEditingId, { method: 'PUT', json: payload });
-        showStatus('已更新活動推廣店家');
-      } else {
-        await api('/api/promo-stores', { method: 'POST', json: payload });
-        showStatus('已新增活動推廣店家');
-      }
-      promoEditor.hidden = true;
-      resetPromoEditor();
-      await loadPromo();
-    } catch (err) {
-      showStatus(err.message, true);
-    }
-  });
-
-  document.getElementById('promo-delete-btn').addEventListener('click', async function () {
-    if (!promoEditingId) return;
-    if (!confirm('確定刪除此店家？只會從活動推廣移除，不會影響原本的商店分類。')) return;
-    try {
-      await api('/api/promo-stores/' + promoEditingId, { method: 'DELETE' });
-      showStatus('已從活動推廣刪除');
-      promoEditor.hidden = true;
-      resetPromoEditor();
-      await loadPromo();
+      showStatus('已恢復活動海報');
     } catch (err) {
       showStatus(err.message, true);
     }
