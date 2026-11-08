@@ -135,6 +135,7 @@
     field('f-discount').value = '';
     field('f-notes').value = '';
     field('f-website').value = '';
+    field('f-map').value = '';
     field('f-sort').value = '';
     field('f-visible').value = '1';
     field('f-promo-visible').value = '0';
@@ -163,6 +164,7 @@
     field('f-discount').value = store.discount || '';
     field('f-notes').value = store.notes || '';
     field('f-website').value = store.website || '';
+    field('f-map').value = store.map_url || '';
     field('f-sort').value = store.sort_order != null ? store.sort_order : '';
     field('f-visible').value = store.visible ? '1' : '0';
     field('f-promo-visible').value = store.promo_visible ? '1' : '0';
@@ -197,6 +199,7 @@
       discount: field('f-discount').value.trim(),
       notes: field('f-notes').value.trim(),
       website: field('f-website').value.trim(),
+      map_url: field('f-map').value.trim(),
       images: images,
       image_url: images[0] || '',
       pdf_url: field('f-pdf-url').value.trim(),

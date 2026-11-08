@@ -107,6 +107,15 @@
           '</span></a>'
       );
     }
+    if (store.map_url) {
+      linkItems.push(
+        '<a class="store-link store-link-map" href="' +
+          esc(store.map_url) +
+          '" target="_blank" rel="noopener">' +
+          '<span class="store-link-label">地圖</span>' +
+          '<span class="store-link-text">Google Map</span></a>'
+      );
+    }
     if (store.pdf_url) {
       linkItems.push(
         '<a class="store-link store-link-pdf" href="' +

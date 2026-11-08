@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS stores (
   discount TEXT DEFAULT '',
   notes TEXT DEFAULT '',
   website TEXT DEFAULT '',
+  map_url TEXT DEFAULT '',
   image_url TEXT DEFAULT '',
   image_urls TEXT DEFAULT '[]',
   pdf_url TEXT DEFAULT '',

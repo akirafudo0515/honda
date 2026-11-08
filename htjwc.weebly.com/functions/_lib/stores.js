@@ -10,6 +10,7 @@ const FIELDS = [
   'discount',
   'notes',
   'website',
+  'map_url',
   'image_url',
   'image_urls',
   'pdf_url',
@@ -128,6 +129,7 @@ export function prepareStoreData(body, { partial = false } = {}) {
     data.region = REGIONS.has(region) ? region : 'all';
   }
   if (data.pdf_name !== undefined) data.pdf_name = decodeMaybeUri(String(data.pdf_name || '').trim());
+  if (data.map_url !== undefined) data.map_url = String(data.map_url || '').trim();
 
   return data;
 }
